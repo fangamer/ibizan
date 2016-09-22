@@ -150,6 +150,7 @@ class Spreadsheet
               .done(
                 () ->
                   deferred.resolve last
+                  Logger.debug "done"
               )
           )
           .catch(

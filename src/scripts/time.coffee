@@ -173,6 +173,7 @@ module.exports = (robot) ->
   # Punch for a given mode
   robot.respond REGEX.modes, id: 'time.punchByMode', userRequired: true, (res) ->
     parse res, res.match.input, res.match[1]
+    Logger.debug "parsed"
 
   # Punch for a block of time
   robot.respond REGEX.rel_time, id: 'time.punchByTime', userRequired: true, (res) ->
