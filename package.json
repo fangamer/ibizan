@@ -43,7 +43,7 @@
     "coveralls": "^2.11.14",
     "hubot-test-helper": "^1.5.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.0.2",
+    "mocha": "^3.1.0",
     "request": "^2.75.0",
     "sinon": "^1.17.6"
   },
