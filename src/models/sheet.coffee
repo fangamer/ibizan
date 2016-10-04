@@ -5,6 +5,7 @@ moment = require 'moment'
 
 require '../../lib/moment-holidays.js'
 { HEADERS } = require '../helpers/constants'
+{ Calendar, CalendarEvent } = require './calendar'
 Logger = require('../helpers/logger')()
 Project = require './project'
 { User, Settings, Timetable } = require './user'
@@ -36,6 +37,7 @@ class Spreadsheet
     .then(@_loadVariables.bind(@))
     .then(@_loadProjects.bind(@))
     .then(@_loadEmployees.bind(@))
+    .then(@_loadEvents.bind(@))
     .then(@_loadPunches.bind(@))
     .catch((error) -> deferred.reject("Couldn't download sheet data: #{error}"))
     .done(
@@ -221,6 +223,16 @@ class Spreadsheet
             deferred.resolve numberDone
     deferred.promise
 
+  addEventRow: (row) ->
+    deferred = Q.defer()
+
+    @events.addRow row, (err) ->
+      if err
+        deferred.reject err
+      else
+        deferred.resolve row
+    deferred.promise
+
   _loadWorksheets: () ->
     deferred = Q.defer()
     @sheet.getInfo (err, info) =>
@@ -247,7 +259,8 @@ class Spreadsheet
                 @payroll and
                 @variables and
                 @projects and
-                @employees)
+                @employees and
+                @events)
           deferred.reject 'Worksheets failed to be associated properly'
         else
           Logger.fun "----------------------------------------"
@@ -334,6 +347,23 @@ class Spreadsheet
             users.push user
         opts.users = users
         Logger.fun "Loaded #{users.length} users"
+        Logger.fun "----------------------------------------"
+        deferred.resolve opts
+    deferred.promise
+
+  _loadEvents: (opts) ->
+    deferred = Q.defer()
+    @events.getRows (err, rows) ->
+      if err
+        deferred.reject err
+      else
+        events = []
+        for row in rows
+          calendarevent = CalendarEvent.parse row
+          if calendarevent
+            events.push calendarevent
+        opts.events = events
+        Logger.fun "Loaded #{events.length} calendar events"
         Logger.fun "----------------------------------------"
         deferred.resolve opts
     deferred.promise

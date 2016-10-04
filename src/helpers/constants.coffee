@@ -1,6 +1,6 @@
 
 regex =
-  ibizan:          /(?:@)?ibizan(?::)? ?/i
+  ibizan:          /^(?:@)?ibizan(?::)? ?/i
   modes:           /\b(in|out|vacation|sick|unpaid)\b/i
   days:            /monday|tuesday|wednesday|thursday|friday|saturday|sunday/i
   rel_time:        /(half-day|(half day)|noon|midnight|((0+)?(?:\.+[0-9]*) hours?)|(0?1 hour)|(1+(?:\.+[0-9]*)? hours)|(0?[2-9]+(?:\.+[0-9]*)? hours)|([1-9][0-9]+(?:\.+[0-9]*)? hours))/i
@@ -68,12 +68,20 @@ cellHeaders =
     sick:                'sickhours'
     overtime:            'overtimehours'
     holiday:             'holidayhours'
+  events:
+    date:                'eventdate'
+    name:                'eventname'
 
 Object.freeze cellHeaders
 
 strings =
   access:
     adminonly:           "You must be an admin in order to access this command."
+    askforhelp:         [
+                          "Maybe you should ask for `help`?",
+                          "Perhaps you should ask for `help`?",
+                          "You could ask for `help`, if you'd like."
+                        ]
     badtoken:            "Bad token in Ibizan configuration.
                           Please contact an admin."
     notanemployee:       "You are not a recognized employee.
@@ -85,11 +93,12 @@ strings =
                           longer than five minutes, DM a maintainer as
                           soon as possible."
     unknowncommand:     [
-                          "_tilts their head confusedly.
-                           Maybe you should ask for help?_",
-                          "_stares blankly. Maybe you should ask for help?_",
-                          "_listens intently, but doesn't know what you meant.
-                           Maybe you should ask for help?_"
+                          "tilts their head confusedly.",
+                          "stares blankly.",
+                          "listens intently, but doesn't know what you meant.",
+                          "barks with no clear intention.",
+                          "extends its paw, unsure of what you actually
+                           wanted it to do."
                         ]
   bark:
     bark:               [
@@ -191,13 +200,23 @@ strings =
     activehelp:           "Use `@ibizan active [start/end] [time]`
                            to set your active hours!\n
                            Example: `@ibizan active start 10am`"
+    addfail:              "I could not understand what you are trying to add.
+                           Things you could `add` include:\n
+                           `add note [note]` - Append a note to your current
+                           punch\n
+                           `add project [#project]` - Append a project to your
+                           current punch\n
+                           `add event [date] [name]` - Add a new event to the
+                           calendar"
     hourshelp:            "Use `@ibizan hours [date]` to view your punches
                            on that date.\n
                            Use `@ibizan hours?` (or today?/week?/month?/year?)
                            to view your punches for the given time period."
+    noevents:             "There are no upcoming events on the calendar."
     notpunchedin:         "I don't think you're punched in right now.
                            If this is in error, ask me to `sync` then try your
                            punch again, or contact an admin."
+    undofail:             "There is nothing for me to undo."
 Object.freeze strings
 
 modes = ['in', 'out', 'vacation', 'unpaid', 'sick']

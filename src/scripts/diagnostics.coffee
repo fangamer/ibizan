@@ -9,9 +9,8 @@
 #   aaronsky
 
 moment = require 'moment'
-require 'moment-precise-range-plugin'
 
-{ HEADERS, STRINGS } = require '../helpers/constants'
+{ HEADERS, STRINGS, TIMEZONE } = require '../helpers/constants'
 strings = STRINGS.diagnostics
 
 Organization = require('../models/organization').get()
@@ -22,7 +21,10 @@ module.exports = (robot) ->
   robot.respond /uptime/i, id: 'diagnostics.uptime', (res) ->
     res.send "#{Organization.name}'s Ibizan has been up since
               #{Organization.initTime.toDate()}
-              _(#{moment().preciseDiff(Organization.initTime)})_"
+              _(#{+moment()
+                .diff(Organization.initTime, 'minutes', true)
+                .toFixed(2)}
+              minutes)_"
     Logger.addReaction 'dog2', res.message
 
   robot.respond /users/i, id: 'diagnostics.users', userRequired: true, adminOnly: true, (res) ->
@@ -50,6 +52,22 @@ module.exports = (robot) ->
       response += " could not be found. Make sure you're using their Slack name."
       user.directMessage response, Logger
       Logger.addReaction 'x', res.message
+
+  robot.respond /daily report/i, id: 'diagnostics.dailyReport', adminOnly: true, (res) ->
+    yesterday =
+      moment.tz({hour: 0, minute: 0, second: 0}, TIMEZONE).subtract(1, 'days')
+    today = moment.tz({hour: 0, minute: 0, second: 0}, TIMEZONE)
+    Organization.generateReport(yesterday, today)
+      .catch((err) ->
+        Logger.errorToSlack "Failed to produce a daily report", err
+      )
+      .done(
+        (reports) ->
+          numberDone = reports.length
+          report = Organization.dailyReport reports, today, yesterday
+          res.send report
+      )
+    Logger.addReaction 'dog2', res.message
 
   robot.respond /projects/i, id: 'diagnostics.projects', userRequired: true, adminOnly: true, (res) ->
     user = Organization.getUserBySlackName res.message.user.name

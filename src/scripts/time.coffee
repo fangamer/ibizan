@@ -178,6 +178,8 @@ module.exports = (robot) ->
   robot.respond REGEX.rel_time, id: 'time.punchByTime', userRequired: true, (res) ->
     parse res, res.match.input, 'none'
 
+  # Switch projects during an 'in' punch
+
   # Append to lastPunch
   robot.respond /(append|add)/i, id: 'time.append', userRequired: true, (res) ->
     user = Organization.getUserBySlackName res.message.user.name
@@ -228,20 +230,41 @@ module.exports = (robot) ->
     else if op is 'event' or
             op is 'calendar' or
             op is 'upcoming'
-      # Calendar.addEvent msg
-      # user.directMessage "Added calendar event: #{results}",
-      user.directMessage "I can't add events just yet~",
-                         Logger
+      Logger.addReaction 'clock4', res.message
+      date = moment(words[0], 'MM/DD/YYYY')
+      if not date.isValid()
+        Logger.addReaction 'x', res.message
+        Logger.removeReaction 'clock4', res.message
+        res.reply "Your event has an invalid date. Make sure you're using the
+                   proper syntax, e.g. `ibizan add event 3/21 Dog Time`"
+        return
+      words.shift()
+      name = words.join(' ').trim()
+      if not name or not name.length > 0
+        Logger.addReaction 'x', res.message
+        Logger.removeReaction 'clock4', res.message
+        res.reply "Your event needs a name. Make sure you're using the
+                   proper syntax, e.g. `ibizan add event 3/21 Dog Time`"
+        return
+      Logger.debug "Adding event on #{date} named #{name}"
+      Organization.addEvent(date, name)
+      .then(
+        (calendarevent) ->
+          Logger.addReaction 'dog2', res.message
+          Logger.removeReaction 'clock4', res.message
+          res.reply "Added new event: *#{calendarevent.name}* on
+                     *#{calendarevent.date.format('M/DD/YYYY')}*"
+      )
+      .catch(
+        (err) ->
+          Logger.error err
+          Logger.addReaction 'x', res.message
+          Logger.removeReaction 'clock4', res.message
+          res.reply "Something went wrong when adding your event."
+      )
+      .done()
     else
-      user.directMessage "I could not understand what you are trying to add.
-                          Things you could `add` include:\n
-                          `add note [note]` - Append a note to your current
-                          punch\n
-                          `add project [#project]` - Append a project to your
-                          current punch\n
-                          `add event [date] [name]` - Add a new event to the
-                          calendar",
-                         Logger
+      user.directMessage strings.addfail, Logger
 
   robot.respond /\bundo$/i, id: 'time.undo', userRequired: true, (res) ->
     user = Organization.getUserBySlackName res.message.user.name
@@ -271,7 +294,20 @@ module.exports = (robot) ->
       )
       .done()
     else
-      user.directMessage 'There\'s nothing for me to undo.', Logger
+      user.directMessage strings.undofail, Logger
+
+  robot.respond /\b(events|upcoming)$/i, id: 'time.events', (res) ->
+    response = ""
+    upcomingEvents = Organization.calendar.upcomingEvents()
+    if upcomingEvents.length > 0
+      response += "Upcoming events:\n"
+      for calendarevent in upcomingEvents
+        response += "*#{calendarevent.date.format('M/DD/YY')}* -
+                     #{calendarevent.name}\n"
+    else
+      response = strings.noevents
+    res.send response
+    Logger.addReaction 'dog2', res.message
 
 
   ## User feedback ##

@@ -321,7 +321,8 @@ class Punch
         else
           return true
       last = user.lastPunch 'out', 'vacation', 'unpaid', 'sick'
-      time = last.times[0].tz(user.timetable.timezone.name)
+      time = last.times[1].tz(user.timetable.timezone.name) or
+             last.times[0].tz(user.timetable.timezone.name)
       return "You cannot punch out before punching in. Your last
               out-punch was at *#{time.format('h:mma')} on
               #{time.format('dddd, MMMM Do')}*."
@@ -423,7 +424,7 @@ class Punch
       color: color
     return attachment
 
-  description: (user) ->
+  description: (user, full=false) ->
     modeQualifier =
      timeQualifier =
      elapsedQualifier =
@@ -518,8 +519,10 @@ class Punch
       for warning in warnings.other
         warningQualifier += " (Warning: #{warning} isn't a recognized input.
                             This is stored this punch's notes.)"
-    description = "#{modeQualifier}#{timeQualifier}#{elapsedQualifier}#{projectsQualifier}#{notesQualifier}#{warningQualifier}"
-
+    if full
+      description = "#{modeQualifier}#{timeQualifier}#{elapsedQualifier}#{projectsQualifier}#{notesQualifier}#{warningQualifier}"
+    else
+      description = "#{modeQualifier}#{timeQualifier}#{elapsedQualifier}"
     return description
 
 _mergeDateTime = (date, time, tz=TIMEZONE) ->
