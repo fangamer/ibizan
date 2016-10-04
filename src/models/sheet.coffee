@@ -26,9 +26,9 @@ class Spreadsheet
       if err
         deferred.reject err
       else
-        Logger.log 'Authorized successfully'
+        Logger.log 'Authorized successfully with Google Sheets'
         deferred.resolve()
-    Logger.log 'waiting for authorization'
+    Logger.log 'Waiting for Google Sheets authorization'
     deferred.promise
 
   loadOptions: () ->

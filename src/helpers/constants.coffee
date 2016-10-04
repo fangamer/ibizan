@@ -223,7 +223,10 @@ modes = ['in', 'out', 'vacation', 'unpaid', 'sick']
 
 timezone = 'America/Phoenix'
 
+contexts = 'direct_message,direct_mention,mention'
+
 module.exports =
+  CONTEXTS: contexts
   HEADERS: cellHeaders
   MODES: modes
   REGEX: regex

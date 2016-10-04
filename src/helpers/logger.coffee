@@ -40,7 +40,7 @@ err = chalk.red
 funHeader = chalk.bold.magenta
 fun = chalk.magenta
 
-module.exports = (robot) ->
+module.exports = (controller) ->
   class Logger
     constructor: () ->
     typeIsArray = (value) ->
@@ -89,6 +89,8 @@ module.exports = (robot) ->
     @fun: (msg) ->
       if msg and not TEST
         console.log(funHeader("[Ibizan] (#{new Date()}) > ") + fun("#{msg}"))
+    @random: (strings) ->
+      return strings[Math.floor(Math.random() * strings.length)]
     @initRTM: () ->
       if robot and
          robot.adapter and
@@ -168,61 +170,53 @@ module.exports = (robot) ->
           @error msg, error
       else
         @error "errorToSlack called with no msg"
-    @addReaction: (reaction, message, attempt=0) ->
-      web = @initWeb()
-      if attempt > 0 and attempt <= 2
+    @addReaction: (bot, reaction, message, attempt=0) ->
+      if err and attempt > 0 and attempt <= 2
         @debug "Retrying adding #{reaction}, attempt #{attempt}..."
       if attempt >= 3
         @error "Failed to add #{reaction} to #{message} after
                 #{attempt} attempts"
         @logToChannel strings.failedreaction, message.user.name
-      else if message and web
-        params =
-          channel: message.room,
-          timestamp: message.id
+      else if bot and reaction and message
         setTimeout ->
-          web.reactions.add reaction, params
-          .then(
-            (response) ->
+          bot.api.reactions.add {
+            timestamp: message.ts,
+            channel: message.channel,
+            name: reaction
+          }, (err, res) ->
+            if err
+              attempt += 1
+              Logger.addReaction reaction, message, attempt
+            else
               if attempt >= 1
                 Logger.debug "Added #{reaction} to #{message} after
                               #{attempt} attempts"
-          )
-          .catch(
-            (err) ->
+        , 1000 * attempt
+      else
+        @error "Missing parameters in addReaction"
+    @removeReaction: (reaction, message, attempt=0) ->
+      if err and attempt > 0 and attempt <= 2
+        @debug "Retrying removing #{reaction}, attempt #{attempt}..."
+      if attempt >= 3
+        @error "Failed to remove #{reaction} to #{message} after
+                #{attempt} attempts"
+        @logToChannel strings.failedreaction, message.user.name
+      else if bot and reaction and message
+        setTimeout ->
+          bot.api.reactions.remove {
+            timestamp: message.ts,
+            channel: message.channel,
+            name: reaction
+          }, (err, res) ->
+            if err
               attempt += 1
               Logger.addReaction reaction, message, attempt
-          )
-        , 1000 * attempt
-      else
-        @error "Slack web client unavailable"
-    @removeReaction: (reaction, message, attempt=0) ->
-      web = @initWeb()
-      if attempt > 0 and attempt <= 2
-        @debug "Retrying removal of #{reaction}, attempt #{attempt}..."
-      if attempt >= 3
-        @error "Failed to remove #{reaction} from #{message}
-                after #{attempt} attempts"
-        @logToChannel strings.failedreaction, message.user.name
-      else if message and web
-        params =
-          channel: message.room,
-          timestamp: message.id
-        setTimeout ->
-          web.reactions.remove reaction, params
-          .then(
-            (response) ->
+            else
               if attempt >= 1
-                Logger.debug "Removed #{reaction} from #{message}
-                              after #{attempt} attempts"
-          )
-          .catch(
-            (err) ->
-              attempt += 1
-              Logger.removeReaction reaction, message, attempt
-          )
+                Logger.debug "Added #{reaction} to #{message} after
+                              #{attempt} attempts"
         , 1000 * attempt
       else
-        @error "Slack web client unavailable"
+        @error "Missing parameters in addReaction"
 
   Logger

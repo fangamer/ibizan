@@ -62,3 +62,16 @@ module.exports = (robot) ->
                 #{res.random strings.askforhelp}_"
       Logger.addReaction 'question', res.message
       res.finish()
+
+# module.exports =
+#   init: (controller) ->
+#     Logger = require('../helpers/logger')(controller)
+
+#     controller.middleware.receive.use (bot, message, next) ->
+#       # for x, y of bot
+#       #   Logger.debug "#{x} - #{y}"
+#       for x, y of message
+#         Logger.debug "#{x} - #{y}"
+#       # for x, y of next
+#       #   Logger.debug "#{x} - #{y}"
+#       next()
