@@ -23,7 +23,7 @@
     "google-spreadsheet": "^2.0.3",
     "hubot": "^2.19.0",
     "hubot-conversation": "^1.1.1",
-    "hubot-slack": "^4.1.0",
+    "hubot-slack": "^4.2.1",
     "moment": "^2.15.1",
     "moment-range": "^2.2.0",
     "moment-timezone": "^0.5.5",
@@ -43,7 +43,7 @@
     "coveralls": "^2.11.14",
     "hubot-test-helper": "^1.5.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.1.0",
+    "mocha": "^3.1.2",
     "request": "^2.75.0",
     "sinon": "^1.17.6"
   },
