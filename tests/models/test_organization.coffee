@@ -12,15 +12,15 @@ describe 'Organization', ->
     @organization = Organization.get('test')
     if not @organization.spreadsheet.sheet
       @organization.spreadsheet.sheet = MockSheet
-    return @organization.sync({
-      client_email: 'bad@email.com',
-      private_key: 'bad key'
-    })
+    # return @organization.sync({
+    #   client_email: 'bad@email.com',
+    #   private_key: 'bad key'
+    # })
   describe '> Calendar', ->
-    # describe '#description()', ->
-    #   it 'should return a description of the project for output', ->
-    #     description = @organization.calendar.description()
-    #     expect(description).to.exist
+    describe '#description()', ->
+      it 'should return a description of the project for output', ->
+        description = @organization.calendar.description()
+        expect(description).to.exist
   describe '#constructor(name)', ->
   describe '#sync()', ->
     it 'should sync all options appropriately', ->
