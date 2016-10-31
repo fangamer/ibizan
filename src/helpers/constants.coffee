@@ -1,6 +1,6 @@
 
 regex =
-  ibizan:          /^(?:@)?ibizan(?::)? ?/i
+  ibizan:          /^(?:@)?(ibizan|Xx_iBiZaN_da_DaWg_xX)(?::)? ?/i
   modes:           /\b(in|out|vacation|sick|unpaid)\b/i
   days:            /monday|tuesday|wednesday|thursday|friday|saturday|sunday/i
   rel_time:        /(half-day|(half day)|noon|midnight|((0+)?(?:\.+[0-9]*) hours?)|(0?1 hour)|(1+(?:\.+[0-9]*)? hours)|(0?[2-9]+(?:\.+[0-9]*)? hours)|([1-9][0-9]+(?:\.+[0-9]*)? hours))/i
