@@ -23,7 +23,7 @@
     "google-spreadsheet": "^2.0.3",
     "hubot": "^2.19.0",
     "hubot-conversation": "^1.1.1",
-    "hubot-slack": "^4.2.1",
+    "hubot-slack": "github:slackapi/hubot-slack#65d92090636e4b8ca770e3f6b4aca03485511cbe",
     "moment": "^2.16.0",
     "moment-range": "^2.2.0",
     "moment-timezone": "^0.5.9",
