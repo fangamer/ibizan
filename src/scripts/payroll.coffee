@@ -35,7 +35,7 @@ module.exports = (robot) ->
           numberDone = reports.length
           report = Organization.dailyReport reports, today, yesterday
           Logger.logToChannel report,
-                              'bizness-time'
+                              'announcements'
           Logger.logToChannel "Daily report generated for
                                #{numberDone} employees",
                               'ibizan-diagnostics'
