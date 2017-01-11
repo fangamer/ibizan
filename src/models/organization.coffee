@@ -146,6 +146,7 @@ class Organization
       deferred.promise
     dailyReport: (reports, today, yesterday) ->
       PAYROLL = HEADERS.payrollreports
+      USERS = HEADERS.users
       response = "DAILY WORK LOG:
                   *#{yesterday.format('dddd MMMM D YYYY').toUpperCase()}*\n"
       logBuffer = ''
@@ -153,15 +154,15 @@ class Organization
 
       # Sort reports by time logged
       reports.sort((left, right) ->
-        if left[headers.logged] < right[headers.logged] or
-           left[headers.vacation] < left[headers.vacation] or
-           left[headers.sick] < left[headers.sick] or
-           left[headers.unpaid] < left[headers.unpaid]
+        if left[USERS.logged] < right[USERS.logged] or
+           left[USERS.vacation] < left[USERS.vacation] or
+           left[USERS.sick] < left[USERS.sick] or
+           left[USERS.unpaid] < left[USERS.unpaid]
           return -1
-        else if left[headers.logged] > right[headers.logged] or
-                left[headers.vacation] > left[headers.vacation] or
-                left[headers.sick] > left[headers.sick] or
-                left[headers.unpaid] > left[headers.unpaid]
+        else if left[USERS.logged] > right[USERS.logged] or
+                left[USERS.vacation] > left[USERS.vacation] or
+                left[USERS.sick] > left[USERS.sick] or
+                left[USERS.unpaid] > left[USERS.unpaid]
           return 1
         return 0
       )
