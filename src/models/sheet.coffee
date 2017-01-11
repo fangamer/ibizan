@@ -214,15 +214,19 @@ class Spreadsheet
     numberDone = 0
 
     that = @
-    that.payroll.addRow reports[numberDone], (err) ->
-      if err
-        deferred.reject err, numberDone
-      else
-        numberDone += 1
-        if numberDone >= reports.length
-          deferred.resolve numberDone
+
+    addPayrollRow = (row) ->
+      @payroll.addRow reports[numberDone], (err) ->
+        if err
+          deferred.reject err, numberDone
         else
-          that.payroll.addRow reports[numberDone]
+          numberDone += 1
+          if numberDone >= reports.length
+            deferred.resolve numberDone
+          else
+            addPayrollRow reports[numberDone]
+    addPayrollRow reports[numberDone]
+
     deferred.promise
 
   addEventRow: (row) ->
