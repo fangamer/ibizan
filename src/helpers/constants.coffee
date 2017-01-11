@@ -29,6 +29,7 @@ cellHeaders =
     slackname:           'slackusername'
     name:                'employeename'
     salary:              'salary'
+    taxType:             'taxType'
     start:               'activehoursbegin'
     end:                 'activehoursend'
     timezone:            'timezone'

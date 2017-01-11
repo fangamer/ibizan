@@ -79,6 +79,7 @@ class Settings
 class User
   constructor: (@name, @slack, @salary, @timetable, @row = null) ->
     @punches = []
+    @taxType = 'W2'
   @parse: (row) ->
     headers = HEADERS.users
     temp = {}
@@ -99,6 +100,8 @@ class User
           temp[key] = row[header]
       else if header is headers.shouldHound
         temp[key] = row[header] is 'Y'
+      else if header is headers.taxType
+        temp.taxType = row[header] || 'W2'
       else if header is headers.houndFrequency
         temp[key] = row[header] || -1
         if temp[key] is -1
@@ -321,7 +324,8 @@ class User
                           vacationTime +
                           sickTime
 
-    row[headers.unpaid] = unpaidTime
+    if @salary
+      row[headers.unpaid] = unpaidTime
     row[headers.logged] = loggedTime
     row[headers.vacation] = vacationTime
     row[headers.sick] = sickTime

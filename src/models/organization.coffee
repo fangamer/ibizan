@@ -119,23 +119,25 @@ class Organization
                   to #{end.format('MMM Do, YYYY')}"
       headers = HEADERS.payrollreports
       reports = []
-      for user in @users
-        row = user.toRawPayroll(start, end)
-        if row
-          reports.push row
-      reports.sort((left, right) ->
-        if left[headers.logged] < right[headers.logged] or
-           left[headers.vacation] < left[headers.vacation] or
-           left[headers.sick] < left[headers.sick] or
-           left[headers.unpaid] < left[headers.unpaid]
+      # Sort by last name, then tax type
+      usersByLastName = @users.sort((a, b) ->
+        if a.name.split(' ').pop() < b.name.split(' ').pop()
           return -1
-        else if left[headers.logged] > right[headers.logged] or
-                left[headers.vacation] > left[headers.vacation] or
-                left[headers.sick] > left[headers.sick] or
-                left[headers.unpaid] > left[headers.unpaid]
+        if a.name.split(' ').pop() > b.name.split(' ').pop()
           return 1
         return 0
       )
+      usersByTaxType = usersByLastName.sort((a, b) ->
+        if a.taxType > b.taxType
+          return -1
+        if a.taxType < b.taxType
+          return 1
+        return 0
+      )
+      for user in usersByTaxType
+        row = user.toRawPayroll(start, end)
+        if row
+          reports.push row
       if send
         @spreadsheet.generateReport(reports)
         .done((numberDone) -> deferred.resolve(reports))
