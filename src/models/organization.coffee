@@ -153,7 +153,7 @@ class Organization
       offBuffer = ''
 
       # Sort reports by time logged
-      reports.sort((left, right) ->
+      sortedReports = reports.sort((left, right) ->
         if left[USERS.logged] < right[USERS.logged] or
            left[USERS.vacation] < left[USERS.vacation] or
            left[USERS.sick] < left[USERS.sick] or
@@ -166,7 +166,7 @@ class Organization
           return 1
         return 0
       )
-      for report in reports
+      for report in sortedReports
         recorded = false
         if report[PAYROLL.logged] > 0
           status = "#{report.extra.slack}:\t\t\t#{report[PAYROLL.logged]} hours"

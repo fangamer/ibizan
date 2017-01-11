@@ -221,7 +221,7 @@ class Spreadsheet
         if numberDone >= reports.length
           deferred.resolve numberDone
         else
-          @payroll.addRow reports[numberDone]
+          arguments.callee reports[numberDone]
     deferred.promise
 
   addEventRow: (row) ->
