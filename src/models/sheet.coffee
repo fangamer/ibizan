@@ -214,9 +214,8 @@ class Spreadsheet
     numberDone = 0
 
     that = @
-
     addPayrollRow = (row) ->
-      @payroll.addRow reports[numberDone], (err) ->
+      that.payroll.addRow reports[numberDone], (err) ->
         if err
           deferred.reject err, numberDone
         else
