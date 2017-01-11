@@ -151,6 +151,20 @@ class Organization
       logBuffer = ''
       offBuffer = ''
 
+      # Sort reports by time logged
+      reports.sort((left, right) ->
+        if left[headers.logged] < right[headers.logged] or
+           left[headers.vacation] < left[headers.vacation] or
+           left[headers.sick] < left[headers.sick] or
+           left[headers.unpaid] < left[headers.unpaid]
+          return -1
+        else if left[headers.logged] > right[headers.logged] or
+                left[headers.vacation] > left[headers.vacation] or
+                left[headers.sick] > left[headers.sick] or
+                left[headers.unpaid] > left[headers.unpaid]
+          return 1
+        return 0
+      )
       for report in reports
         recorded = false
         if report[PAYROLL.logged] > 0

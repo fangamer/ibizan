@@ -213,14 +213,15 @@ class Spreadsheet
     deferred = Q.defer()
     numberDone = 0
 
-    for row in reports
-      @payroll.addRow row, (err) ->
-        if err
-          deferred.reject err, numberDone
+    @payroll.addRow reports[numberDone], (err) ->
+      if err
+        deferred.reject err, numberDone
+      else
+        numberDone += 1
+        if numberDone >= reports.length
+          deferred.resolve numberDone
         else
-          numberDone += 1
-          if numberDone >= reports.length
-            deferred.resolve numberDone
+          @payroll.addRow reports[numberDone]
     deferred.promise
 
   addEventRow: (row) ->
