@@ -274,7 +274,9 @@ class User
     headers = HEADERS.payrollreports
     row = {}
     row[headers.date] = moment.tz(TIMEZONE).format('M/DD/YYYY')
-    row[headers.name] = @name
+    firstName = @name.split(' ').slice(0, -1).join(' ')
+    lastName = @name.split(' ').slice(-1)
+    row[headers.name] = lastName + ', ' + firstName
     loggedTime = unpaidTime = vacationTime = sickTime = 0
     projectsForPeriod = []
     for punch in @punches
