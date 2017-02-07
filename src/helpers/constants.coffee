@@ -62,12 +62,13 @@ cellHeaders =
   payrollreports:
     date:                'payrolldate'
     name:                'employeename'
-    paid:                'paidhours'
-    unpaid:              'unpaidhours'
     logged:              'loggedhours'
+    unpaid:              'unpaidhours'
+    paid:                'paidhours'
+    salary:              'salaryhours'
+    overtime:            'overtimehours'
     vacation:            'vacationhours'
     sick:                'sickhours'
-    overtime:            'overtimehours'
     holiday:             'holidayhours'
   events:
     date:                'eventdate'

@@ -318,21 +318,28 @@ class User
     vacationTime = +vacationTime.toFixed(2)
     sickTime = +sickTime.toFixed(2)
     unpaidTime = +unpaidTime.toFixed(2)
+    holidayTime = @timetable.holiday || 0
 
     if @salary
-      row[headers.paid] = 80 - unpaidTime
+      rawUnpaidTime = 80 - loggedTime
+      if rawUnpaidTime > 0
+        row[headers.paid] = 80 - rawUnpaidTime
+      else
+        row[headers.paid] = 80 - unpaidTime
+      row[headers.unpaid] = if unpaidTime > 0 then unpaidTime else ''
+      row[headers.vacation] = if vacationTime > 0 then vacationTime else ''
+      row[headers.sick] = if sickTime > 0 then sickTime else ''
+      row[headers.salary] = 80 - sickTime - vacationTime - holidayTime - unpaidTime
     else
       row[headers.paid] = loggedTime +
                           vacationTime +
                           sickTime
+      row[headers.salary] = loggedTime
 
-    if @salary
-      row[headers.unpaid] = unpaidTime
     row[headers.logged] = loggedTime
-    row[headers.vacation] = vacationTime
-    row[headers.sick] = sickTime
-    row[headers.overtime] = Math.max(0, loggedTime - 80)
-    row[headers.holiday] = @timetable.holiday || 0
+    overTime = Math.max(0, loggedTime - 80)
+    row[headers.overtime] = if overTime > 0 then overTime else ''
+    row[headers.holiday] = if holidayTime > 0 then holidayTime else ''
     row.extra = {
       slack: @slack,
       projects: projectsForPeriod
