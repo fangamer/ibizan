@@ -324,16 +324,16 @@ class User
       rawUnpaidTime = 80 - loggedTime
       if rawUnpaidTime > unpaidTime
         unpaidTime = rawUnpaidTime 
-      row[headers.paid] = if unpaidTime > 0 then 80 - unpaidTime else ''
+      paidTime = 80 - unpaidTime
+      row[headers.paid] = if paidTime > 0 then paidTime else ''
       row[headers.unpaid] = if unpaidTime > 0 then unpaidTime else ''
       row[headers.vacation] = if vacationTime > 0 then vacationTime else ''
       row[headers.sick] = if sickTime > 0 then sickTime else ''
       row[headers.salary] = 80 - sickTime - vacationTime - holidayTime - unpaidTime
     else
-      row[headers.paid] = loggedTime +
-                          vacationTime +
-                          sickTime
-      row[headers.salary] = loggedTime
+      paidTime = loggedTime + vacationTime + sickTime
+      row[headers.paid] = if paidTime > 0 then paidTime else ''
+      row[headers.salary] = if loggedTime > 0 then loggedTime else ''
 
     row[headers.logged] = loggedTime
     overTime = Math.max(0, loggedTime - 80)
