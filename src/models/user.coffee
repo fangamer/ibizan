@@ -322,10 +322,9 @@ class User
 
     if @salary
       rawUnpaidTime = 80 - loggedTime
-      if rawUnpaidTime > 0
-        row[headers.paid] = 80 - rawUnpaidTime
-      else
-        row[headers.paid] = 80 - unpaidTime
+      if rawUnpaidTime > unpaidTime
+        unpaidTime = rawUnpaidTime 
+      row[headers.paid] = if unpaidTime > 0 then 80 - unpaidTime else ''
       row[headers.unpaid] = if unpaidTime > 0 then unpaidTime else ''
       row[headers.vacation] = if vacationTime > 0 then vacationTime else ''
       row[headers.sick] = if sickTime > 0 then sickTime else ''
