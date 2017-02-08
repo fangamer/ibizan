@@ -329,9 +329,9 @@ class User
       row[headers.unpaid] = if unpaidTime > 0 then unpaidTime else ''
       row[headers.vacation] = if vacationTime > 0 then vacationTime else ''
       row[headers.sick] = if sickTime > 0 then sickTime else ''
-      row[headers.salary] = 80 - sickTime - vacationTime - holidayTime - unpaidTime
+      row[headers.salary] = Math.min(80, loggedTime + vacationTime + sickTime + holidayTime)
     else
-      paidTime = loggedTime + vacationTime + sickTime
+      paidTime = loggedTime
       row[headers.paid] = if paidTime > 0 then paidTime else ''
       row[headers.salary] = if loggedTime > 0 then loggedTime else ''
 
