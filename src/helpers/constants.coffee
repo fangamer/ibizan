@@ -65,6 +65,7 @@ cellHeaders =
     logged:              'loggedhours'
     unpaid:              'unpaidhours'
     paid:                'paidhours'
+    salary:              'salaryhours'
     overtime:            'overtimehours'
     vacation:            'vacationhours'
     sick:                'sickhours'
