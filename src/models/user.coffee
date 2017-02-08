@@ -321,19 +321,14 @@ class User
     holidayTime = @timetable.holiday || 0
 
     if @salary
-      rawUnpaidTime = 80 - loggedTime
-      if rawUnpaidTime > unpaidTime
-        unpaidTime = rawUnpaidTime 
-      paidTime = 80 - unpaidTime
+      paidTime = Math.min(80, loggedTime + vacationTime + sickTime + holidayTime)
       row[headers.paid] = if paidTime > 0 then paidTime else ''
       row[headers.unpaid] = if unpaidTime > 0 then unpaidTime else ''
       row[headers.vacation] = if vacationTime > 0 then vacationTime else ''
       row[headers.sick] = if sickTime > 0 then sickTime else ''
-      row[headers.salary] = Math.min(80, loggedTime + vacationTime + sickTime + holidayTime)
     else
       paidTime = loggedTime
       row[headers.paid] = if paidTime > 0 then paidTime else ''
-      row[headers.salary] = if loggedTime > 0 then loggedTime else ''
 
     row[headers.logged] = loggedTime
     overTime = Math.max(0, loggedTime - 80)
