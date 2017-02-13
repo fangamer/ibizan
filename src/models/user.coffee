@@ -326,11 +326,11 @@ class User
       row[headers.unpaid] = if unpaidTime > 0 then unpaidTime else ''
       row[headers.vacation] = if vacationTime > 0 then vacationTime else ''
       row[headers.sick] = if sickTime > 0 then sickTime else ''
-      row[headers.salary] = '=MIN(80,MINUS(80,SUM(D1,H1:K1)))'
+      # row[headers.salary] = '=MIN(80,MINUS(80,SUM(D1,H1:K1)))'
     else
       paidTime = loggedTime
       row[headers.paid] = if paidTime > 0 then paidTime else ''
-      row[headers.salary] = '=MIN(80,MINUS(C1,SUM(D1,H1:K1)))'
+      # row[headers.salary] = '=MIN(80,MINUS(C1,SUM(D1,H1:K1)))'
 
     row[headers.logged] = loggedTime
     overTime = Math.max(0, loggedTime - 80)
