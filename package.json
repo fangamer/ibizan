@@ -24,13 +24,13 @@
     "hubot": "^2.19.0",
     "hubot-conversation": "^1.1.1",
     "hubot-slack": "^4.3.3",
-    "moment": "^2.17.1",
+    "moment": "^2.18.1",
     "moment-range": "^3.0.3",
     "moment-timezone": "^0.5.11",
     "moment-weekend": "^1.0.1",
-    "node-schedule": "^1.2.0",
-    "node-uuid": "^1.4.7",
-    "q": "^1.4.1"
+    "node-schedule": "^1.2.1",
+    "node-uuid": "^1.4.8",
+    "q": "^1.5.0"
   },
   "engines": {
     "node": "6.9.x"
@@ -40,12 +40,12 @@
     "co": "^4.6.0",
     "coffee-coverage": "^2.0.1",
     "coffee-script": "^1.12.4",
-    "coveralls": "^2.11.16",
+    "coveralls": "^2.12.0",
     "hubot-test-helper": "^1.5.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
-    "request": "^2.79.0",
-    "sinon": "^1.17.7"
+    "request": "^2.81.0",
+    "sinon": "^2.1.0"
   },
   "scripts": {
     "start": "./bin/ibizan",
