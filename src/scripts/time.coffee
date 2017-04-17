@@ -377,7 +377,7 @@ module.exports = (robot) ->
     user.directMessage msg, Logger, attachments
 
   # Returns the hours worked for the given time period
-  robot.respond /.*(hours|today|week|month|year|period)+[\?\!\.¿¡]/i, id: 'time.hours', userRequired: true, (res) ->
+  robot.respond /.*(hours+[\?\!\.¿¡]|today+[\?\!\.¿¡]|week+[\?\!\.¿¡]?|month+[\?\!\.¿¡]?|year+[\?\!\.¿¡]?|period+[\?\!\.¿¡]?)/i, id: 'time.hours', userRequired: true, (res) ->
     user = Organization.getUserBySlackName res.message.user.name
     tz = user.timetable.timezone.name
     now = moment.tz(tz)
