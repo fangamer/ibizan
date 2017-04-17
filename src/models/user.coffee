@@ -123,7 +123,7 @@ class User
         if isNaN row[header]
           temp[key] = row[header].trim()
         else
-          temp[key] = parseInt row[header]
+          temp[key] = parseFloat row[header]
     timetable = new Timetable(temp.start, temp.end, temp.timezone)
     timetable.setVacation(temp.vacationLogged, temp.vacationAvailable)
     timetable.setSick(temp.sickLogged, temp.sickAvailable)
