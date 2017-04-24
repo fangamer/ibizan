@@ -382,7 +382,7 @@ module.exports = (robot) ->
     tz = user.timetable.timezone.name
     now = moment.tz(tz)
     attachments = []
-    mode = res.match[1].toLowerCase()
+    mode = res.match[1].toLowerCase().replace("?", "")
     report = dateArticle = null
     headers = HEADERS.payrollreports
     if mode is 'week'
