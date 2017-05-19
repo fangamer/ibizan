@@ -168,6 +168,25 @@ module.exports = (robot) ->
           @error msg, error
       else
         @error "errorToSlack called with no msg"
+    @logDMToSlack: (msg, username, attachments) ->
+      rtm = @initRTM()
+      if msg and username
+        if rtm and
+           rtm.dataStore and
+           rtm.dataStore.getChannelOrGroupByName?
+          message =
+            text: msg,
+            username: 'ibizan'
+          if attachments
+            message.attachments = attachments
+          diagnosticsRoom =
+            rtm.dataStore.getChannelOrGroupByName 'ibizan-diagnostics'
+          diagnosticsID = diagnosticsRoom.id
+          robot.send {room: diagnosticsID}, message
+        else
+          @error msg, username
+      else
+        @error "logDMToSlack called with no msg or username"
     @addReaction: (reaction, message, attempt=0) ->
       web = @initWeb()
       if attempt > 0 and attempt <= 2

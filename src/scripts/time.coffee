@@ -154,6 +154,7 @@ module.exports = (robot) ->
           user.directMessage punchEnglish, Logger
         else
           user.directMessage punchEnglish, Logger, [punch.slackAttachment()]
+          Logger.logDMToSlack punchEnglish, "@#{user.slack}", [punch.slackAttachment()]
         Logger.addReaction 'dog2', res.message
         Logger.removeReaction 'clock4', res.message
     )
@@ -276,13 +277,14 @@ module.exports = (robot) ->
       .then(user.updateRow.bind(user))
       .then(
         () ->
+          undoEnglish = "Undid your last punch, which was:
+                         *#{lastPunchDescription}*\n\nYour most current
+                         punch is now:
+                         *#{user.lastPunch().description(user)}*"
           Logger.addReaction 'dog2', res.message
           Logger.removeReaction 'clock4', res.message
-          user.directMessage "Undid your last punch, which was:
-                              *#{lastPunchDescription}*\n\nYour most current
-                              punch is now:
-                              *#{user.lastPunch().description(user)}*",
-                             Logger
+          user.directMessage undoEnglish, Logger
+          Logger.logDMToSlack undoEnglish, "@#{user.slack}"
       )
       .catch(
         (err) ->
