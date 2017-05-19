@@ -175,7 +175,7 @@ module.exports = (robot) ->
            rtm.dataStore and
            rtm.dataStore.getChannelOrGroupByName?
           message =
-            text: msg,
+            text: "DM sent to #{username}:\n>>>" + msg,
             username: 'ibizan'
           if attachments
             message.attachments = attachments
