@@ -398,7 +398,7 @@ function onHoursForPeriodHandler(bot: botkit.Bot, message: Message) {
         lowerBoundDate = now.clone().hour(0).minute(0).second(0).subtract(1, 'days');
         upperBoundDate = now.clone().hour(23).minute(59).second(59).subtract(1, 'days');
         report = user.toRawPayroll(lowerBoundDate, upperBoundDate);
-        dateArticle = `yesterday (${lowerBoundDate.format('M/DD')}`;
+        dateArticle = `yesterday (${lowerBoundDate.format('M/DD')})`;
     } else if (mode === 'period') {
         lowerBoundDate = moment({
             hour: 0,
