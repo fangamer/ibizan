@@ -404,11 +404,11 @@ function onHoursForPeriodHandler(bot: botkit.Bot, message: Message) {
             hour: 0,
             minute: 0,
             second: 0
-        }).day('Sunday');
+        }).day('Monday');
         if (organization.calendar.isPayWeek()) {
-            lowerBoundDate = lowerBoundDate.subtract(6, 'days');
+            lowerBoundDate = lowerBoundDate.subtract(1, 'weeks');
         }
-        upperBoundDate = lowerBoundDate.clone().add(14, 'days');
+        upperBoundDate = lowerBoundDate.clone().add(13, 'days');
         if (message.match[0].match(/(last|previous)/)) {
             lowerBoundDate = lowerBoundDate.subtract(2, 'weeks');
             upperBoundDate = upperBoundDate.subtract(2, 'weeks');
