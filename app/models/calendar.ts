@@ -26,7 +26,7 @@ export class Calendar {
     }
 
     isPayWeek() {
-        return (moment().diff(this.payroll.referenceDate, 'weeks') % this.payroll.period) == 0;
+        return (moment().diff('1/18/2016', 'weeks') % 2) == 0;
     }
 
     upcomingEvents(date = moment()) {
