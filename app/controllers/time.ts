@@ -394,6 +394,11 @@ function onHoursForPeriodHandler(bot: botkit.Bot, message: Message) {
         upperBoundDate = now;
         report = user.toRawPayroll(lowerBoundDate, upperBoundDate);
         dateArticle = 'this year';
+    } else if (mode === 'yesterday') {
+        lowerBoundDate = now.clone().hour(0).minute(0).second(0).subtract(1, 'days');
+        upperBoundDate = now.clone().hour(23).minute(59).second(59).subtract(1, 'days');
+        report = user.toRawPayroll(lowerBoundDate, upperBoundDate);
+        dateArticle = `yesterday (${lowerBoundDate.format('M/DD')}`;
     } else if (mode === 'period') {
         lowerBoundDate = moment({
             hour: 0,
@@ -403,7 +408,7 @@ function onHoursForPeriodHandler(bot: botkit.Bot, message: Message) {
         if (organization.calendar.isPayWeek()) {
             lowerBoundDate = lowerBoundDate.subtract(1, 'weeks');
         }
-        upperBoundDate = lowerBoundDate.clone().add(2, 'weeks');
+        upperBoundDate = lowerBoundDate.clone().add(13, 'days');
         if (message.match[0].match(/(last|previous)/)) {
             lowerBoundDate = lowerBoundDate.subtract(2, 'weeks');
             upperBoundDate = upperBoundDate.subtract(2, 'weeks');
@@ -652,7 +657,7 @@ export default function (controller: botkit.Controller) {
     // Returns the hours worked for the given time period
     // respond
     // time.hours, userRequired: true
-    controller.hears('.*(hours|today|week|month|year|period)+[\?\!\.¿¡]',
+    controller.hears('.*(hours|today|yesterday|week|month|year|period)+[\?\!\.¿¡]',
         EVENTS.respond,
         buildOptions({ id: 'time.hours', userRequired: true }, controller),
         onHoursForPeriodHandler);
