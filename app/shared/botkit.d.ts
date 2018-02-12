@@ -323,6 +323,7 @@ declare module botkit {
         reply(src: Message, resp: string);
         reply(src: Message, resp: string, cb?: (err?: string | Error) => void): never;
         say(message: Message, cb?: (err?: string | Error) => void): never;
+        whisper(message: Message, cb?: (err?: string | Error) => void): never;
         startTyping(src: any): never;
         replyWithTyping(src: any, resp: string, cb: (err?: string | Error) => void): never;
         replyAndUpdate(src: any, resp: string, cb: (err?: string | Error) => void): never;

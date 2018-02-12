@@ -106,6 +106,13 @@ export namespace SlackLogger {
         }
     }
 
+    export function whisper(text: string, message: Message, attachment?: any) {
+        if (bot && text && message) {
+            const response = composeMessage(text, message.channel, attachment);
+            bot.whisper(message, response);
+        }
+    }
+
     export function error(text: string, error?: any) {
         if (!text) {
             console.error('SlackLogger#error called with no message');

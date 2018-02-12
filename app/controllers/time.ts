@@ -93,7 +93,7 @@ function parse(bot: botkit.Bot, message: Message, mode: Mode, organization: Orga
         user.directMessage(message.copy.time.forbiddenChannel(channel.name, organization.clockChannel));
         return;
     }
-    Slack.reactTo(message, 'clock4');
+    Slack.reactTo(message, 'spinner');
     const msg = message.match.input.replace(REGEX.ibizan, '').trim();
     const tz = user.timetable.timezone.name || TIMEZONE;
     const punch = Punch.parse(organization, user, msg, mode, tz);
@@ -129,21 +129,23 @@ async function sendPunch(punch: Punch, user: User, message: Message, organizatio
     try {
         const enteredPunch = await organization.spreadsheet.rawData.enterPunch(punch, user, organization);
         console.log(`@${user.slackName}'s punch was successfully entered into the spreadsheet.`);
+        Slack.log(`@${user.slackName} punched ${enteredPunch.description(user)}.`, 'timeclock');
         const punchEnglish = `Punched you *${enteredPunch.description(user)}*.`;
         if (enteredPunch.mode === 'in') {
-            user.directMessage(punchEnglish);
+            Slack.whisper(punchEnglish, message);
         } else {
             const attachments = [enteredPunch.slackAttachment()];
+            Slack.whisper(punchEnglish, message, [enteredPunch.slackAttachment()]);
             user.directMessage(punchEnglish, attachments);
         }
         Slack.reactTo(message, 'dog2');
-        Slack.unreact(message, 'clock4');
+        Slack.unreact(message, 'spinner');
     } catch (err) {
         console.error(err);
         Slack.error(`"${err.message}" was returned for ${user.slackName}. Punch:\n`, message.match.input);
-        user.directMessage(`\n${err.message}`);
+        Slack.whisper(`\n${err.message}`, message);
         Slack.reactTo(message, 'x');
-        Slack.unreact(message, 'clock4');
+        Slack.unreact(message, 'spinner');
     }
 }
 
@@ -200,11 +202,11 @@ async function onAppendHandler(bot: botkit.Bot, message: Message) {
             console.error('Unable to append row', err);
         }
     } else if (operator === 'event' || operator === 'calendar' || operator === 'upcoming') {
-        Slack.reactTo(message, 'clock4');
+        Slack.reactTo(message, 'spinner');
         const date = moment(words[0], 'MM/DD/YYYY');
         if (!date.isValid()) {
             Slack.reactTo(message, 'x');
-            Slack.unreact(message, 'clock4');
+            Slack.unreact(message, 'spinner');
             bot.reply(message, 'Your event has an invalid date. Make sure you\'re using the proper syntax, emit.g. `ibizan add event 3/21 Dog Time`');
             return;
         }
@@ -212,7 +214,7 @@ async function onAppendHandler(bot: botkit.Bot, message: Message) {
         const name = words.join(' ').trim();
         if (!name || name.length === 0) {
             Slack.reactTo(message, 'x');
-            Slack.unreact(message, 'clock4');
+            Slack.unreact(message, 'spinner');
             bot.reply(message, 'Your event needs a name. Make sure you\'re using the proper syntax, encode.g. `ibizan add event 3/21 Dog Time`');
             return;
         }
@@ -220,12 +222,12 @@ async function onAppendHandler(bot: botkit.Bot, message: Message) {
         try {
             const calendarEvent = await organization.addEvent(date, name);
             Slack.reactTo(message, 'dog2');
-            Slack.unreact(message, 'clock4');
+            Slack.unreact(message, 'spinner');
             bot.reply(message, `Added new event: *${calendarEvent.name}* on *${calendarEvent.date.format('M/DD/YYYY')}*`);
         } catch (err) {
             console.error(err);
             Slack.reactTo(message, 'x');
-            Slack.unreact(message, 'clock4');
+            Slack.unreact(message, 'spinner');
             bot.reply(message, 'Something went wrong when adding your event.');
         }
     } else {
@@ -241,14 +243,14 @@ async function onUndoHandler(bot: botkit.Bot, message: Message) {
     }
     const user = organization.getUserBySlackName(message.user_obj.name);
     if (user.punches && user.punches.length > 0) {
-        Slack.reactTo(message, 'clock4');
+        Slack.reactTo(message, 'spinner');
         let lastPunch = user.lastPunch();
         const lastPunchDescription = lastPunch.description(user);
         try {
             await user.undoPunch();
             await user.updateRow();
             Slack.reactTo(message, 'dog2');
-            Slack.unreact(message, 'clock4');
+            Slack.unreact(message, 'spinner');
             lastPunch = user.lastPunch();
             const msg = message.copy.time.undoSuccess(lastPunchDescription, lastPunch && lastPunch.description(user));
             user.directMessage(msg);

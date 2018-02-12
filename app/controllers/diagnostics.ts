@@ -120,15 +120,15 @@ async function onSyncHandler(bot, message: Message) {
         console.error('No Organization was found for the team: ' + bot);
         return;
     }
-    Slack.reactTo(message, 'clock4');
+    Slack.reactTo(message, 'spinner');
     try {
         const status = await organization.sync();
         bot.reply(message, message.copy.diagnostics.syncSuccess);
-        Slack.unreact(message, 'clock4');
+        Slack.unreact(message, 'spinner');
         Slack.reactTo(message, 'dog2');
     } catch (err) {
         Slack.error(message.copy.diagnostics.syncFailed, err);
-        Slack.unreact(message, 'clock4');
+        Slack.unreact(message, 'spinner');
         Slack.reactTo(message, 'x');
     }
 }
