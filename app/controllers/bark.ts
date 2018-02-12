@@ -41,7 +41,7 @@ function onFetchHandler(bot: botkit.Bot, message: Message) {
         bot.say(msg);
     } else {
         const msg = {
-            text: message.copy.bark.fetch(2, message.user_obj.name, thing),
+            text: message.copy.bark.fetch(1, message.user_obj.name, thing),
             channel: message.channel
         } as Message;
         bot.say(msg);
