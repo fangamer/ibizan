@@ -54,7 +54,7 @@ export class App {
             applyReceiveMiddleware(this.controller);
             this.controller.middleware.receive.use(this.onReceiveSetOrganization.bind(this))
                 .use(this.onReceiveSetAccessHandler.bind(this));
-            this.controller.middleware.receive.use(this.onReceiveCheckIndirectMention);
+            this.controller.middleware.receive.use(this.onReceiveCheckIndirectMention.bind(this));
             this.controller.storage.teams.all(this.connectTeamsToSlack.bind(this));
 
             this.controller.createWebhookEndpoints(this.webserver);
@@ -196,7 +196,7 @@ export class App {
         if (message &&
             message.text &&
             (message.text.match(REGEX.ibizan_indirect))) {
-            bot.trigger('direct_mention', [bot, message]);
+            this.controller.trigger('direct_mention', [bot, message]);
         }
         next();
     }
