@@ -98,6 +98,7 @@ function parse(bot: botkit.Bot, message: Message, mode: Mode, organization: Orga
     const tz = user.timetable.timezone.name || TIMEZONE;
     const punch = Punch.parse(organization, user, msg, mode, tz);
     const channelIsProject = organization.matchesProject(channel.name);
+    const punchIsPublic = organization.matchesClockChannel(channel.name);
     if (!punch.projects.length && channelIsProject) {
         const project = organization.getProjectByName(channel.name);
         if (project) {
@@ -116,11 +117,11 @@ function parse(bot: botkit.Bot, message: Message, mode: Mode, organization: Orga
         article = 'an';
     }
     console.log(`Successfully generated ${article} ${modeQualifier}-punch for @${user.slackName}: ${punch.description(user)}`);
-    sendPunch(punch, user, message, organization);
+    sendPunch(punch, user, message, organization, punchIsPublic);
 }
 
 // Send the punch to the org's Spreadsheet
-async function sendPunch(punch: Punch, user: User, message: Message, organization: Organization) {
+async function sendPunch(punch: Punch, user: User, message: Message, organization: Organization, punchIsPublic: boolean) {
     if (!punch) {
         Slack.error(`Somehow, a punch was not generated for \"${user.slackName}\". Punch:\n`, message.match.input);
         Slack.whisper('An unexpected error occured while generating your punch.', message);
@@ -129,7 +130,9 @@ async function sendPunch(punch: Punch, user: User, message: Message, organizatio
     try {
         const enteredPunch = await organization.spreadsheet.rawData.enterPunch(punch, user, organization);
         console.log(`@${user.slackName}'s punch was successfully entered into the spreadsheet.`);
-        Slack.log(`@${user.slackName} punched ${enteredPunch.description(user)}.`, 'timeclock');
+        if (!punchIsPublic) {
+            Slack.log(`${user.slackName} punched ${enteredPunch.description(user)}.`, organization.clockChannel);
+        }
         const punchEnglish = `Punched you *${enteredPunch.description(user)}*.`;
         if (enteredPunch.mode === 'in') {
             Slack.whisper(punchEnglish, message);

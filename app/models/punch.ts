@@ -675,7 +675,10 @@ export class Punch {
             time = this.date;
             timeStr = '';
         } else {
-            timeStr = `at ${time.tz(user.timetable.timezone.name).format('h:mma')} `
+            timeStr = `at ${time.tz(user.timetable.timezone.name).format('h:mma')} `;
+            if (user.timetable.timezone.abbrs[0] != 'MST') {
+                timeStr += `${user.timetable.timezone.abbrs[0]} `;
+            }
         }
 
         let dateQualifier;
