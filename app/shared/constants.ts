@@ -36,7 +36,7 @@ export const TIMEZONE = 'America/Phoenix';
 
 export const EVENTS = {
     hear: ['direct_message', 'direct_mention', 'mention', 'ambient'],
-    respond: ['direct_message', 'direct_mention', 'mention'],
+    respond: ['direct_message', 'direct_mention'],
     onboardTeam: 'ibizan_onboard_team',
     onboardUser: 'ibizan_onboard_user',
     shouldHound: 'ibizan_should_hound',
