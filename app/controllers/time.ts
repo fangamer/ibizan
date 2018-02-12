@@ -90,7 +90,7 @@ function parse(bot: botkit.Bot, message: Message, mode: Mode, organization: Orga
     const isAllowed = canPunchHere(channel, organization);
     if (!isAllowed) {
         Slack.reactTo(message, 'x');
-        user.directMessage(message.copy.time.forbiddenChannel(channel.name, organization.clockChannel));
+        Slack.whisper(message.copy.time.forbiddenChannel(channel.name, organization.clockChannel), message);
         return;
     }
     Slack.reactTo(message, 'spinner');
@@ -123,7 +123,7 @@ function parse(bot: botkit.Bot, message: Message, mode: Mode, organization: Orga
 async function sendPunch(punch: Punch, user: User, message: Message, organization: Organization) {
     if (!punch) {
         Slack.error(`Somehow, a punch was not generated for \"${user.slackName}\". Punch:\n`, message.match.input);
-        user.directMessage('An unexpected error occured while generating your punch.');
+        Slack.whisper('An unexpected error occured while generating your punch.', message);
         return;
     }
     try {
@@ -134,9 +134,7 @@ async function sendPunch(punch: Punch, user: User, message: Message, organizatio
         if (enteredPunch.mode === 'in') {
             Slack.whisper(punchEnglish, message);
         } else {
-            const attachments = [enteredPunch.slackAttachment()];
             Slack.whisper(punchEnglish, message, [enteredPunch.slackAttachment()]);
-            user.directMessage(punchEnglish, attachments);
         }
         Slack.reactTo(message, 'dog2');
         Slack.unreact(message, 'spinner');
@@ -176,7 +174,7 @@ async function onAppendHandler(bot: botkit.Bot, message: Message) {
     if (operator === 'project' || operator === 'projects' || operator === 'note' || operator === 'notes') {
         const punch = user.lastPunch('in');
         if (!punch) {
-            user.directMessage(message.copy.time.notPunchedIn);
+            Slack.whisper(message.copy.time.notPunchedIn, message);
             return;
         }
         if (operator === 'project' || operator === 'projects') {
@@ -195,10 +193,10 @@ async function onAppendHandler(bot: botkit.Bot, message: Message) {
         const row = punch.toRawRow(user.realName);
         try {
             await organization.spreadsheet.rawData.saveRow(row);
-            user.directMessage(`Added ${operator} ${results}`);
+            Slack.whisper(`Added ${operator} ${results}`, message);
             Slack.reactTo(message, 'dog2');
         } catch (err) {
-            user.directMessage(err);
+            Slack.whisper(err, message);
             console.error('Unable to append row', err);
         }
     } else if (operator === 'event' || operator === 'calendar' || operator === 'upcoming') {
@@ -231,7 +229,7 @@ async function onAppendHandler(bot: botkit.Bot, message: Message) {
             bot.reply(message, 'Something went wrong when adding your event.');
         }
     } else {
-        user.directMessage(message.copy.time.addFail);
+        Slack.whisper(message.copy.time.addFail, message);
     }
 }
 
@@ -253,13 +251,13 @@ async function onUndoHandler(bot: botkit.Bot, message: Message) {
             Slack.unreact(message, 'spinner');
             lastPunch = user.lastPunch();
             const msg = message.copy.time.undoSuccess(lastPunchDescription, lastPunch && lastPunch.description(user));
-            user.directMessage(msg);
+            Slack.whisper(msg, message);
         } catch (err) {
             Slack.error(`"${err}" was returned for an undo operation by ${user.slackName}`);
-            user.directMessage(message.copy.time.undoError);
+            Slack.whisper(message.copy.time.undoError, message);
         }
     } else {
-        user.directMessage(message.copy.time.undoFail);
+        Slack.whisper(message.copy.time.undoFail, message);
     }
 }
 
@@ -304,7 +302,7 @@ function onHoursForDateHandler(bot: botkit.Bot, message: Message) {
     const date = moment(message.match[1], 'MM/DD/YYYY');
     if (!date.isValid()) {
         console.log(`hours: \"${message.match[1]}\" is an invalid date`);
-        user.directMessage(`\"${message.match[1]}\" is not a valid date`);
+        Slack.whisper(`\"${message.match[1]}\" is not a valid date`, message);
         Slack.reactTo(message, 'x');
         return;
     }
@@ -349,7 +347,7 @@ function onHoursForDateHandler(bot: botkit.Bot, message: Message) {
         msg += ' (' + report.extra.projects.reduce((acc, project) => acc + `#${project.name}`, msg) + ')';
     }
     Slack.reactTo(message, 'dog2');
-    user.directMessage(msg, attachments);
+    Slack.whisper(msg, message, attachments);
 }
 
 function onHoursForPeriodHandler(bot: botkit.Bot, message: Message) {
@@ -465,7 +463,7 @@ function onHoursForPeriodHandler(bot: botkit.Bot, message: Message) {
     }
 
     Slack.reactTo(message, 'dog2');
-    user.directMessage(msg, attachments);
+    Slack.whisper(msg, message, attachments);
 }
 
 function onUserStatusHandler(bot: botkit.Bot, message: Message) {
@@ -475,7 +473,7 @@ function onUserStatusHandler(bot: botkit.Bot, message: Message) {
         return;
     }
     const user = organization.getUserBySlackName(message.user_obj.name);
-    user.directMessage('Your status:', [user.slackAttachment()]);
+    Slack.whisper('Your status:', message, [user.slackAttachment()]);
     Slack.reactTo(message, 'dog2');
 }
 
@@ -492,7 +490,7 @@ function onUserTimeHandler(bot: botkit.Bot, message: Message) {
     if (userTime.format('z') !== ibizanTime.format('z')) {
         msg += `\n\nIt's ${ibizanTime.format('h:mm A')} in the default timezone (${ibizanTime.format('z, Z')}).`;
     }
-    user.directMessage(msg);
+    Slack.whisper(msg, message);
     Slack.reactTo(message, 'dog2');
 }
 
@@ -504,7 +502,7 @@ function onUserTimezoneHandler(bot: botkit.Bot, message: Message) {
     }
     const user = organization.getUserBySlackName(message.user_obj.name);
     const userTime = moment.tz(user.timetable.timezone.name);
-    user.directMessage(`Your timezone is set to *${user.timetable.timezone.name}* (${userTime.format('z, Z')}).`);
+    Slack.whisper(`Your timezone is set to *${user.timetable.timezone.name}* (${userTime.format('z, Z')}).`, message);
     Slack.reactTo(message, 'dog2');
 }
 
@@ -538,9 +536,9 @@ function onSetUserTimezoneHandler(bot: botkit.Bot, message: Message) {
     }
     if (isTzSet) {
         const userTime = moment.tz(user.timetable.timezone.name);
-        user.directMessage(`Your timezone is now *${user.timetable.timezone.name}* (${userTime.format('z, Z')}).`);
+        Slack.whisper(`Your timezone is now *${user.timetable.timezone.name}* (${userTime.format('z, Z')}).`, message);
     } else {
-        user.directMessage('I do not recognize that timezone. Check <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List|this list> for a valid time zone name.');
+        Slack.whisper('I do not recognize that timezone. Check <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List|this list> for a valid time zone name.', message);
         Slack.reactTo(message, 'x');
     }
 }
@@ -571,29 +569,29 @@ function onSetUserActiveTimesHandler(bot: botkit.Bot, message: Message) {
     if (scope !== 'unknown' && time !== 'notime') {
         const newTime = moment.tz(time, 'h:mm A', user.timetable.timezone.name);
         if (!newTime.isValid()) {
-            user.directMessage(`\"${time}\" is not a valid time.`);
+            Slack.whisper(`\"${time}\" is not a valid time.`, message);
             Slack.reactTo(message, 'x');
             return;
         }
         if (scope === 'start') {
             if (!newTime.isBefore(user.timetable.end)) {
-                user.directMessage(`${newTime.format('h:mm A')} is not before your current end time of ${user.timetable.start.format('h:mm A')}.`);
+                Slack.whisper(`${newTime.format('h:mm A')} is not before your current end time of ${user.timetable.start.format('h:mm A')}.`, message);
                 Slack.reactTo(message, 'x');
                 return;
             }
             user.setStart(newTime);
         } else if (scope === 'end') {
             if (!newTime.isAfter(user.timetable.start)) {
-                user.directMessage(`${newTime.format('h:mm A')} is not after your current start time of ${user.timetable.start.format('h:mm A')}.`);
+                Slack.whisper(`${newTime.format('h:mm A')} is not after your current start time of ${user.timetable.start.format('h:mm A')}.`, message);
                 Slack.reactTo(message, 'x');
                 return;
             }
             user.setEnd(newTime);
         }
-        user.directMessage(`Your active *${scope}* time is now *${newTime.format('h:mm A')}*.`);
+        Slack.whisper(`Your active *${scope}* time is now *${newTime.format('h:mm A')}*.`, message);
         Slack.reactTo(message, 'dog2');
     } else {
-        user.directMessage(message.copy.time.activeFail);
+        Slack.whisper(message.copy.time.activeFail, message);
         Slack.reactTo(message, 'x');
     }
 }

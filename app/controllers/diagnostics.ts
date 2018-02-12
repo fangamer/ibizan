@@ -34,7 +34,7 @@ function onUsersListHandler(bot, message: Message) {
     }
     const user = organization.getUserBySlackName(message.user_obj.name);
     const attachments = organization.users.map(user => user.slackAttachment());
-    user.directMessage(message.copy.diagnostics.users, attachments);
+    Slack.whisper(message.copy.diagnostics.users, message, attachments);
     Slack.reactTo(message, 'dog2');
 }
 
@@ -53,10 +53,10 @@ function onUserDetailHandler(bot, message: Message) {
     const queryedUser = organization.getUserBySlackName(message.match[1]);
     const response = message.copy.diagnostics.user(message.match[1], !!queryedUser);
     if (queryedUser) {
-        requestingUser.directMessage(response, [queryedUser.slackAttachment()]);
+        Slack.whisper(response, message, [queryedUser.slackAttachment()]);
         Slack.reactTo(message, 'dog2');
     } else {
-        requestingUser.directMessage(response);
+        Slack.whisper(response, message);
         Slack.reactTo(message, 'x');
     }
 }
@@ -98,7 +98,7 @@ function onProjectsListHandler(bot, message: Message) {
     const user = organization.getUserBySlackName(message.user_obj.name);
     const response = message.copy.diagnostics.projects;
     const attachments = organization.projects.map(project => project.slackAttachment());
-    user.directMessage(response, attachments);
+    Slack.whisper(response, message, attachments);
     Slack.reactTo(message, 'dog2');
 }
 
@@ -110,7 +110,7 @@ function onCalendarHandler(bot, message: Message) {
     }
     const user = organization.getUserBySlackName(message.user_obj.name);
     const attachment = [organization.calendar.slackAttachment()];
-    user.directMessage(message.copy.diagnostics.calendar, attachment);
+    Slack.whisper(message.copy.diagnostics.calendar, message, attachment);
     Slack.reactTo(message, 'dog2');
 }
 
@@ -140,7 +140,7 @@ function onHelpHandler(bot, message: Message) {
         return;
     }
     const user = organization.getUserBySlackName(message.user_obj.name);
-    user.directMessage(message.copy.diagnostics.help);
+    Slack.whisper(message.copy.diagnostics.help, message);
     Slack.reactTo(message, 'dog2');
 }
 
