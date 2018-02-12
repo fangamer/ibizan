@@ -121,9 +121,11 @@ declare module botkit {
         user: string;
         channel: string;
         ts: string;
+        command: string;
         // custom botkit fields
         event?: string;
         match?: RegExpMatchArray;
+        copy: any;
     }
     interface User {
         id: string;

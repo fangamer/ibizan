@@ -286,11 +286,7 @@ function onUpcomingEventsHandler(bot: botkit.Bot, message: Message) {
 }
 
 function onHoursHelpHandler(bot: botkit.Bot, message: Message) {
-    const msg = {
-        text: message.copy.time.hoursHelp,
-        channel: message.channel
-    } as Message;
-    bot.say(msg);
+    Slack.whisper(message.copy.time.hoursHelp, message);
     Slack.reactTo(message, 'dog2');
 }
 
@@ -608,9 +604,23 @@ export default function (controller: botkit.Controller) {
         buildOptions({ id: 'time.punchByMode', userRequired: true }, controller),
         onPunchHandler);
 
+    // Slash command responses
+    // /punch -> time.punchByMode OR time.punchByTime
+    // /punch -> time.hours
+    // /ibizan -> catchall that submits anything to ibizan as if it were a mention
+    controller.on('slash_command', function(bot, message) {
+        if (message.command == '/punch') {
+            onPunchHandler(bot, message);
+        } else if (message.command == '/hours') {
+            onHoursForPeriodHandler(bot, message);
+        } else if (message.command == '/ibizan') {
+            controller.trigger('direct_mention', [bot, message]);
+        }
+    });
+
     // Punch for a block of time
     // respond
-    // 'time.punchByTime', userRequired: true
+    // time.punchByTime, userRequired: true
     controller.hears(REGEX_STR.rel_time,
         EVENTS.respond,
         buildOptions({ id: 'time.punchByTime', userRequired: true }, controller),
