@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import { IbizanConfig } from './types';
 
-const REQUIRED_SCOPES = ['bot', 'im:read'];
+const REQUIRED_SCOPES = ['bot', 'commands', 'channels:read', 'chat:write:bot', 'im:read', 'mpim:read', 'reactions:read', 'reactions:write', 'team:read', 'users.profile:read', 'users:read'];
 
 export function createIbizanConfig(rcPathOverride?: string, optsPath?: string, args?: any): IbizanConfig {
     const rcConfig = loadIbizanRc(rcPathOverride);
