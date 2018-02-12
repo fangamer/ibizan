@@ -604,20 +604,6 @@ export default function (controller: botkit.Controller) {
         buildOptions({ id: 'time.punchByMode', userRequired: true }, controller),
         onPunchHandler);
 
-    // Slash command responses
-    // /punch -> time.punchByMode OR time.punchByTime
-    // /punch -> time.hours
-    // /ibizan -> catchall that submits anything to ibizan as if it were a mention
-    controller.on('slash_command', function(bot, message) {
-        if (message.command == '/punch') {
-            onPunchHandler(bot, message);
-        } else if (message.command == '/hours') {
-            onHoursForPeriodHandler(bot, message);
-        } else if (message.command == '/ibizan') {
-            controller.trigger('direct_mention', [bot, message]);
-        }
-    });
-
     // Punch for a block of time
     // respond
     // time.punchByTime, userRequired: true
@@ -670,7 +656,7 @@ export default function (controller: botkit.Controller) {
     // Returns the hours worked for the given time period
     // respond
     // time.hours, userRequired: true
-    controller.hears('.*(hours|today|yesterday|week|month|year|period)+[\?\!\.¿¡]',
+    controller.hears(REGEX_STR.hours,
         EVENTS.respond,
         buildOptions({ id: 'time.hours', userRequired: true }, controller),
         onHoursForPeriodHandler);
@@ -714,6 +700,24 @@ export default function (controller: botkit.Controller) {
         EVENTS.respond,
         buildOptions({ id: 'time.active', userRequired: true }, controller),
         onSetUserActiveTimesHandler);
+
+    // Slash command responses
+    // /punch -> time.punchByMode OR time.punchByTime
+    // /hours -> time.hours
+    // /ibizan -> catchall that submits anything to ibizan as if it were a mention
+    controller.on('slash_command', function(bot, message) {
+        bot.replyAcknowledge();
+
+        if (message.command == '/punch') {
+            message.match = message.text.match(REGEX_STR.modes);
+            onPunchHandler(bot, message);
+        } else if (message.command == '/hours') {
+            message.match = message.text.match(REGEX_STR.hours);
+            onHoursForPeriodHandler(bot, message);
+        } else if (message.command == '/ibizan') {
+            controller.trigger('direct_mention', [bot, message]);
+        }
+    });
 
     return controller;
 };

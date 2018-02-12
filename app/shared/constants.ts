@@ -4,6 +4,7 @@ interface RegexConstants {
     ibizan_indirect: RegExp;
     modes: RegExp;
     days: RegExp;
+    hours: RegExp;
     rel_time: RegExp;
     time: RegExp;
     months: RegExp;
@@ -15,6 +16,7 @@ export const REGEX: RegexConstants = {
     ibizan_indirect: /^ibizan(?::)? ?/i,
     modes: /\b(in|out|vacation|sick|unpaid)\b/i,
     days: /monday|tuesday|wednesday|thursday|friday|saturday|sunday/i,
+    hours: /.*(hours|today|yesterday|week|month|year|period)+[\?\!\.¿¡]/i,
     rel_time: /(half-day|(half day)|noon|midnight|((0+)?(?:\.+[0-9]*) hours?)|(0?1 hour)|(1+(?:\.+[0-9]*)? hours)|(0?[2-9]+(?:\.+[0-9]*)? hours)|([1-9][0-9]+(?:\.+[0-9]*)? hours))/i,
     time: /(\b(0?[1-9])|(1[0-2]))(?:(:[0-5][0-9] ?(am?|pm?)?\b)| ?(am?|pm?)\b)|((\b([0-1][0-9])|(2[0-3])):([0-5][0-9])\b)/i,
     months: /\b(?:Jan(?:uary)?|Mar(?:ch)?|May|Jul(?:y)?|Aug(?:ust)?|Oct(?:ober)?|Dec(?:ember)?|Sep(?:tember)?|Apr(?:il)?|Jun(?:e)?|Nov(?:ember)?|Feb(?:ruary)?)\b/i,

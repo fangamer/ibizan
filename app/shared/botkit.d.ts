@@ -316,7 +316,7 @@ declare module botkit {
         createConversation(message: Message, cb: (err: Error, convo: Conversation) => void): never;
         private _startDM(task: Task, user_id: string, cb: Function): any;
         send(message: Message, cb: (err?: string | Error) => void): never;
-        replyAcknowledge(cb: (err?: string | Error) => void): never;
+        replyAcknowledge(cb?: (err?: string | Error) => void): never;
         replyPublic(src: any, resp: string, cb: (err?: string | Error) => void): never;
         replyPublicDelayed(src: any, resp: string, cb: (err?: string | Error) => void): never;
         replyPrivate(src: any, resp: string, cb: (err?: string | Error) => void): never;
