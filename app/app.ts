@@ -196,7 +196,7 @@ export class App {
         if (message &&
             message.text &&
             (message.text.match(REGEX.ibizan_indirect))) {
-            this.controller.trigger('direct_mention', [bot, message]);
+            bot.trigger('direct_mention', [bot, message]);
         }
         next();
     }
