@@ -56,6 +56,8 @@ export class App {
                 .use(this.onReceiveSetAccessHandler.bind(this));
             this.controller.storage.teams.all(this.connectTeamsToSlack.bind(this));
 
+            this.controller.createWebhookEndpoints(this.webserver);
+
             this.loadScripts();
         });
     }
