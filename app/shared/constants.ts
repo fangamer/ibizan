@@ -1,6 +1,7 @@
 
 interface RegexConstants {
     ibizan: RegExp;
+    ibizan_indirect: RegExp;
     modes: RegExp;
     days: RegExp;
     rel_time: RegExp;
@@ -11,6 +12,7 @@ interface RegexConstants {
 }
 export const REGEX: RegexConstants = {
     ibizan: /^(?:@)?ibizan(?::)? ?/i,
+    ibizan_indirect: /^ibizan(?::)? ?/i,
     modes: /\b(in|out|vacation|sick|unpaid)\b/i,
     days: /monday|tuesday|wednesday|thursday|friday|saturday|sunday/i,
     rel_time: /(half-day|(half day)|noon|midnight|((0+)?(?:\.+[0-9]*) hours?)|(0?1 hour)|(1+(?:\.+[0-9]*)? hours)|(0?[2-9]+(?:\.+[0-9]*)? hours)|([1-9][0-9]+(?:\.+[0-9]*)? hours))/i,

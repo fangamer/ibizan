@@ -54,6 +54,7 @@ export class App {
             applyReceiveMiddleware(this.controller);
             this.controller.middleware.receive.use(this.onReceiveSetOrganization.bind(this))
                 .use(this.onReceiveSetAccessHandler.bind(this));
+            this.controller.middleware.receive.use(this.onReceiveCheckIndirectMention);
             this.controller.storage.teams.all(this.connectTeamsToSlack.bind(this));
 
             this.controller.createWebhookEndpoints(this.webserver);
@@ -190,6 +191,14 @@ export class App {
             }
         }
         return true;
+    }
+    onReceiveCheckIndirectMention(bot: botkit.Bot, message: Message, next: () => void) {
+        if (message &&
+            message.text &&
+            (message.text.match(REGEX.ibizan_indirect))) {
+            this.controller.trigger('direct_mention', [bot, message]);
+        }
+        next();
     }
     async onDiagnosticsSyncRoute(req: express.Request, res: express.Response) {
         const body = req.body;
