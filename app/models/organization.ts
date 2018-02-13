@@ -207,7 +207,7 @@ export class Organization {
                     status += ` ${projectStr}`;
                 }
                 status += '\n';
-                logBuffer += '${status}';
+                logBuffer += `${status}`;
                 recorded = true;
             }
             if (+report.vacation > 0) {
