@@ -41,7 +41,7 @@ async function onScheduledReportHandler(organization: Organization) {
         const numberDone = reports.length;
         const report = organization.dailyReport(reports, today, yesterday);
         // TODO: generalize the reporting channel
-        Slack.log(report, 'bizness-time');
+        Slack.log(report, 'announcements');
         Slack.log(`Daily report generated for ${numberDone} employees`, 'ibizan-diagnostics');
     } catch (err) {
         Slack.error('Failed to produce a daily report', err);
