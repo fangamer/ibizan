@@ -97,6 +97,14 @@ function parse(bot: botkit.Bot, message: Message, mode: Mode, organization: Orga
     const msg = message.match.input.replace(REGEX.ibizan, '').trim();
     const tz = user.timetable.timezone.name || TIMEZONE;
     const punch = Punch.parse(organization, user, msg, mode, tz);
+
+    // FANGAMER-ONLY TWEAK: no block punches!!
+    if (punch.mode === 'none' && punch.times.block) {
+        Slack.reactTo(message, 'x');
+        Slack.whisper(`Block punches for normal punches are disabled. Please punch with a specific in/out time and date.`, message);
+        return;
+    }
+
     const channelIsProject = organization.matchesProject(channel.name);
     const punchIsPublic = organization.matchesClockChannel(channel.name);
     if (!punch.projects.length && channelIsProject) {
