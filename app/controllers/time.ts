@@ -93,17 +93,16 @@ function parse(bot: botkit.Bot, message: Message, mode: Mode, organization: Orga
         Slack.whisper(message.copy.time.forbiddenChannel(channel.name, organization.clockChannel), message);
         return;
     }
-    Slack.reactTo(message, 'spinner');
-    const msg = message.match.input.replace(REGEX.ibizan, '').trim();
-    const tz = user.timetable.timezone.name || TIMEZONE;
-    const punch = Punch.parse(organization, user, msg, mode, tz);
-
     // FANGAMER-ONLY TWEAK: no block punches!!
-    if (punch.mode === 'none' && punch.times.block) {
+    if (message.text.includes("hour") && !message.text.includes("vacation") && !message.text.includes("sick")) {
         Slack.reactTo(message, 'x');
         Slack.whisper(`Block punches for normal punches are disabled. Please punch with a specific in/out time and date.`, message);
         return;
     }
+    Slack.reactTo(message, 'spinner');
+    const msg = message.match.input.replace(REGEX.ibizan, '').trim();
+    const tz = user.timetable.timezone.name || TIMEZONE;
+    const punch = Punch.parse(organization, user, msg, mode, tz);
 
     const channelIsProject = organization.matchesProject(channel.name);
     const punchIsPublic = organization.matchesClockChannel(channel.name);
