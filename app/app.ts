@@ -164,10 +164,7 @@ export class App {
         }
 
         console.log(`Responding to '${message.text}' (${id}) from ${user_obj.name} in ${organization.name}`);
-        const orgUser = organization.getUserBySlackName(user_obj.name);
-        if (orgUser) {
-            orgUser.slackId = message.user;
-        }
+        const orgUser = organization.getUserBySlackId(message.user);
 
         // Admin command, but the calling user isn't an admin on Slack
         if (adminOnly && !user_obj.is_admin) {

@@ -18,6 +18,7 @@ const HEADERS = {
     ],
     users: [
         { field: 'slackname', header: 'Slack User Name' },
+        { field: 'slackId', header: 'Slack ID' },
         { field: 'name', header: 'Employee Name' },
         { field: 'salary', header: 'Salary?' },
         { field: 'start', header: 'Active Hours (Begin)' },
@@ -182,6 +183,7 @@ export namespace Rows {
     };
     export class UsersRow extends Row {
         slackname: string;
+        slackId: string;
         name: string;
         salary: string;
         start: string;

@@ -161,10 +161,10 @@ export class User {
     punches: Punch[];
     settings: Settings;
 
-    constructor(name: string, slack: string, salary: boolean, timetable: Timetable, row: Rows.UsersRow = null) {
+    constructor(name: string, slack: string, slackId: string, salary: boolean, timetable: Timetable, row: Rows.UsersRow = null) {
         this.realName = name;
         this.slackName = slack;
-        this.slackId = null;
+        this.slackId = slackId;
         this.salary = salary;
         this.timetable = timetable;
         this.row = row;
@@ -178,7 +178,7 @@ export class User {
         timetable.unpaidTotal = +row.unpaidLogged;
         timetable.loggedTotal = +row.totalLogged;
         timetable.averageLogged = +row.averageLogged;
-        const user = new User(row.name, row.slackname, (row.salary === 'Y'), timetable, row);
+        const user = new User(row.name, row.slackname, row.slackId, (row.salary === 'Y'), timetable, row);
         let lastPing;
         if (row.lastPing && row.lastPing.length !== 0) {
             lastPing = moment.tz(row.lastPing, 'MM/DD/YYYY h:mm:ss A', row.timezone);

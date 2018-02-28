@@ -284,15 +284,15 @@ function onSetUserHoundHandler(bot, message: Message) {
 }
 
 export default function (controller: botkit.Controller) {
-    controller.on('user_typing', (bot, message: Message) => {
-        hound(message.user_obj, message.channel_obj, message.organization, false);
-    });
+    // controller.on('user_typing', (bot, message: Message) => {
+    //     hound(message.user_obj, message.channel_obj, message.organization, false);
+    // });
 
-    controller.on('presence_change', (bot, message: any) => {
-        if (message.presence === 'active') {
-            hound(message.user_obj, { private: null, name: '' }, message.organization, false, true);
-        }
-    });
+    // controller.on('presence_change', (bot, message: any) => {
+    //     if (message.presence === 'active') {
+    //         hound(message.user_obj, { private: null, name: '' }, message.organization, false, true);
+    //     }
+    // });
 
     // Every five minutes, attempt to hound non-salaried users
     const autoHoundJob = schedule.scheduleJob('*/5 * * * *', () => {

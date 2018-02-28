@@ -88,6 +88,15 @@ export class Organization {
         return matches[0];
     }
 
+    getUserBySlackId(id: string) {
+        const matches = this.users.filter(user => user.slackId === id);
+        if (matches.length === 0 || !matches[0]) {
+            console.debug(`A user by the slack ID of ${id} could not be found`);
+            return null;
+        }
+        return matches[0];
+    }
+
     getUserByRealName(name: string) {
         const matches = this.users.filter(user => user.realName === name);
         if (matches.length === 0 || !matches[0]) {
