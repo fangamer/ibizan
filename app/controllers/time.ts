@@ -85,7 +85,7 @@ function toTimeStr(duration: number) {
 function parse(bot: botkit.Bot, message: Message, mode: Mode, organization: Organization) {
     mode = mode.toLowerCase() as Mode;
     const channel = message.channel_obj;
-    const user = organization.getUserBySlackName(message.user_obj.name);
+    const user = organization.getUserBySlackId(message.user);
     console.log(`Parsing '${message.text}' for @${user.slackName}.`);
     const isAllowed = canPunchHere(channel, organization);
     if (!isAllowed) {
@@ -173,7 +173,7 @@ async function onAppendHandler(bot: botkit.Bot, message: Message) {
         return;
     }
     const channelName = message.channel_obj.name;
-    const user = organization.getUserBySlackName(message.user_obj.name);
+    const user = organization.getUserBySlackId(message.user);
     const msg = message.match.input.replace(REGEX.ibizan, '').replace(/(append|add)/i, '').trim();
     const words = msg.split(' ');
     const operator = words[0];
@@ -249,7 +249,7 @@ async function onUndoHandler(bot: botkit.Bot, message: Message) {
         console.error('No Organization was found for the team: ' + bot);
         return;
     }
-    const user = organization.getUserBySlackName(message.user_obj.name);
+    const user = organization.getUserBySlackId(message.user);
     if (user.punches && user.punches.length > 0) {
         Slack.reactTo(message, 'spinner');
         let lastPunch = user.lastPunch();
@@ -303,7 +303,7 @@ function onHoursForDateHandler(bot: botkit.Bot, message: Message) {
         console.error('No Organization was found for the team: ' + bot);
         return;
     }
-    const user = organization.getUserBySlackName(message.user_obj.name);
+    const user = organization.getUserBySlackId(message.user);
     const tz = user.timetable.timezone.name;
     const date = moment(message.match[1], 'MM/DD/YYYY');
     if (!date.isValid()) {
@@ -362,7 +362,7 @@ function onHoursForPeriodHandler(bot: botkit.Bot, message: Message) {
         console.error('No Organization was found for the team: ' + bot);
         return;
     }
-    const user = organization.getUserBySlackName(message.user_obj.name);
+    const user = organization.getUserBySlackId(message.user);
 
     const tz = user.timetable.timezone.name;
     const now = moment.tz(tz);
@@ -478,7 +478,7 @@ function onUserStatusHandler(bot: botkit.Bot, message: Message) {
         console.error('No Organization was found for the team: ' + bot);
         return;
     }
-    const user = organization.getUserBySlackName(message.user_obj.name);
+    const user = organization.getUserBySlackId(message.user);
     Slack.whisper('Your status:', message, [user.slackAttachment()]);
     Slack.reactTo(message, 'dog2');
 }
@@ -489,7 +489,7 @@ function onUserTimeHandler(bot: botkit.Bot, message: Message) {
         console.error('No Organization was found for the team: ' + bot);
         return;
     }
-    const user = organization.getUserBySlackName(message.user_obj.name);
+    const user = organization.getUserBySlackId(message.user);
     const userTime = moment.tz(user.timetable.timezone.name);
     const ibizanTime = moment.tz(TIMEZONE);
     let msg = `It's currently *${userTime.format('h:mm A')}* in your timezone (${userTime.format('z, Z')}).`
@@ -506,7 +506,7 @@ function onUserTimezoneHandler(bot: botkit.Bot, message: Message) {
         console.error('No Organization was found for the team: ' + bot);
         return;
     }
-    const user = organization.getUserBySlackName(message.user_obj.name);
+    const user = organization.getUserBySlackId(message.user);
     const userTime = moment.tz(user.timetable.timezone.name);
     Slack.whisper(`Your timezone is set to *${user.timetable.timezone.name}* (${userTime.format('z, Z')}).`, message);
     Slack.reactTo(message, 'dog2');
@@ -518,7 +518,7 @@ function onSetUserTimezoneHandler(bot: botkit.Bot, message: Message) {
         console.error('No Organization was found for the team: ' + bot);
         return;
     }
-    const user = organization.getUserBySlackName(message.user_obj.name);
+    const user = organization.getUserBySlackId(message.user);
     let input = message.match[1];
     let isTzSet = false;
     let tz = user.setTimezone(input);
@@ -555,7 +555,7 @@ function onSetUserActiveTimesHandler(bot: botkit.Bot, message: Message) {
         console.error('No Organization was found for the team: ' + bot);
         return;
     }
-    const user = organization.getUserBySlackName(message.user_obj.name);
+    const user = organization.getUserBySlackId(message.user);
     const command = message.match[1];
 
     if (!command) {
