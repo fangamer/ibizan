@@ -546,15 +546,16 @@ export class Punch {
             if (last = user.lastPunch('in')) {
                 const time = last.times[0].tz(user.timetable.timezone.name);
                 return `You haven't punched out yet. Your last in-punch was at *${time.format('h:mma')} on ${time.format('dddd, MMMM Do')}*.`;
-            } else if (this.times) {
-                const yesterday = moment().subtract(1, 'days').startOf('day');
-                for (let time of this.times) {
-                    // if mode is 'in' and date is yesterday
-                    if (time.isSame(yesterday, 'd')) {
-                        return 'You can\'t punch in for yesterday\'s date. This is by design and is meant to keep people on top of their timesheet. If you need to file yesterday\'s hours, use a block-time punch.';
-                    }
-                }
             }
+            // else if (this.times) {
+            //     const yesterday = moment().subtract(1, 'days').startOf('day');
+            //     for (let time of this.times) {
+            //         // if mode is 'in' and date is yesterday
+            //         if (time.isSame(yesterday, 'd')) {
+            //             return 'You can\'t punch in for yesterday\'s date. This is by design and is meant to keep people on top of their timesheet. If you need to file yesterday\'s hours, use a block-time punch.';
+            //         }
+            //     }
+            // }
         } else if (this.mode === 'out') {
             let lastIn;
             if (lastIn = user.lastPunch(['in', 'vacation', 'unpaid', 'sick'])) {
