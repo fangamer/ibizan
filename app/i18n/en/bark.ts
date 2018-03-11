@@ -29,6 +29,11 @@ const barkCopy: Localization.BarkLocalizedCopy = {
         'bark bark',
         'bark bark bark'
     ],
+    bigdog: [
+        'HEH, you\'re barking up the wrong tree pup!',
+        'Ya got the wrong dog, and he don\'t like being disturbed!',
+        'Think you\'re ready to run with the REAL Big Dogs? Think again!'
+    ],
     fetch: fetch,
     goodboy: ':ok_hand:',
     story: [

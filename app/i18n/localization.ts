@@ -25,6 +25,7 @@ namespace Localization {
     }
     export interface BarkLocalizedCopy {
         bark: string[];
+        bigdog: string[];
         fetch: (phase: 0 | 1 | 2 | 3, username: string, thing?: string) => string;
         goodboy: string;
         story: string[];

@@ -322,8 +322,8 @@ declare module botkit {
         replyPrivate(src: any, resp: string, cb: (err?: string | Error) => void): never;
         replyPrivateDelayed(src: any, resp: string, cb: (err?: string | Error) => void): never;
         replyInteractive(src: any, resp: string, cb: (err?: string | Error) => void): never;
-        reply(src: Message, resp: string);
-        reply(src: Message, resp: string, cb?: (err?: string | Error) => void): never;
+        reply(src: Message, resp: any);
+        reply(src: Message, resp: any, cb?: (err?: string | Error) => void): never;
         say(message: Message, cb?: (err?: string | Error) => void): never;
         whisper(message: Message, cb?: (err?: string | Error) => void): never;
         startTyping(src: any): never;

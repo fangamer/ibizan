@@ -8,7 +8,7 @@
 
 import * as moment from 'moment';
 
-import { REGEX, EVENTS } from '../shared/constants';
+import { REGEX_STR, EVENTS } from '../shared/constants';
 import { Message, random } from '../shared/common';
 import { Slack } from '../logger';
 import { buildOptions } from '../middleware/access';
@@ -67,6 +67,16 @@ function onFetchHandler(bot: botkit.Bot, message: Message) {
     }
 }
 
+function onAttitudeHandler(bot: botkit.Bot, message: Message) {
+    let response = {
+        text: random(message.copy.bark.bigdog),
+        channel: message.channel,
+        username: "bigdog",
+        icon_url: "https://redco.in/dump/bigdog.png"
+    };
+    bot.reply(message, response);
+}
+
 export default function (controller: botkit.Controller) {
     // bark.bark
     controller.hears('bark',
@@ -91,6 +101,11 @@ export default function (controller: botkit.Controller) {
         EVENTS.respond,
         buildOptions({ id: 'bark.fetch' }, controller),
         onFetchHandler);
+
+    controller.hears(REGEX_STR.bigdog,
+        EVENTS.hear,
+        buildOptions({ id: 'bark.bigdog' }, controller),
+        onAttitudeHandler);
 
     return controller;
 };
