@@ -32,7 +32,14 @@ const barkCopy: Localization.BarkLocalizedCopy = {
     bigdog: [
         'HEH, you\'re barking up the wrong tree pup!',
         'Ya got the wrong dog, and he don\'t like being disturbed!',
-        'Think you\'re ready to run with the REAL Big Dogs? Think again!'
+        'Think you\'re ready to run with the REAL Big Dogs? Think again!',
+        'Remember when I asked for your hours today? Yeah, me neither!',
+        'If you can\'t punch in with the Big Dogs, stay out of #timeclock!',
+        'If people could read my mind... I\'d get punched! And I ain\'t talking about your punches!',
+        'Do I look like a freakin\' punch clock?',
+        'Vacation? I need a six month vacation, twice a year!',
+        'Let _me_ drop everything and enter _your_ punch.',
+        'Think I care about your command? Talk to the paw!'
     ],
     fetch: fetch,
     goodboy: ':ok_hand:',
