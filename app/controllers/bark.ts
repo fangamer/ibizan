@@ -71,9 +71,10 @@ function onAttitudeHandler(bot: botkit.Bot, message: Message) {
     let response = {
         text: random(message.copy.bark.bigdog),
         channel: message.channel,
-        username: "bigdog",
-        icon_url: "https://redco.in/dump/bigdog.png"
+        username: 'bigdog',
+        icon_url: 'https://redco.in/dump/bigdog.png'
     };
+    Slack.reactTo(message, 'bigdog');
     bot.reply(message, response);
 }
 
