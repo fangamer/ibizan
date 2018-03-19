@@ -162,16 +162,11 @@ export class Organization {
             }
             return acc;
         }, [] as Rows.PayrollReportsRow[])
-            .sort((left, right) => {
-                if (+left.logged < +right.logged ||
-                    +left.vacation < +right.vacation ||
-                    +left.sick < +right.sick ||
-                    +left.unpaid < +right.unpaid) {
+            .sort((a, b) => {
+                if (a.name < b.name) {
                     return -1;
-                } else if (+left.logged > +right.logged ||
-                    +left.vacation > +right.vacation ||
-                    +left.sick > +right.sick ||
-                    +left.unpaid > +right.unpaid) {
+                }
+                if (a.name > b.name) {
                     return 1;
                 }
                 return 0;

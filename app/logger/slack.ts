@@ -107,6 +107,7 @@ export namespace SlackLogger {
     }
 
     export function whisper(text: string, message: Message, attachment?: any) {
+        console.info(message.channel);
         if (bot && text && message) {
             const response = composeMessage(text, message.channel, attachment);
             bot.whisper(message, response);

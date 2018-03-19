@@ -345,11 +345,15 @@ export class User {
         });
 
         row.date = moment.tz(TIMEZONE).format('M/DD/YYYY');
-        row.name = this.realName;
+        let firstName = this.realName.split(' ').slice(0, -1).join(' ');
+        let lastName = this.realName.split(' ').slice(-1);
+        row.name = lastName + ', ' + firstName;
         let loggedTime = 0,
             unpaidTime = 0,
             vacationTime = 0,
-            sickTime = 0;
+            sickTime = 0,
+            overTime = 0,
+            holidayTime = 0;
         const projectsForPeriod = [];
         for (let punch of this.punches) {
             if (punch.date.isBefore(start) || punch.date.isAfter(end)) {
@@ -399,19 +403,21 @@ export class User {
         vacationTime = +vacationTime.toFixed(2);
         sickTime = +sickTime.toFixed(2);
         unpaidTime = +unpaidTime.toFixed(2);
+        overTime = Math.max(0, loggedTime - 80);
+        holidayTime = this.timetable.holiday || 0;
 
         if (this.salary) {
-            row.paid = (80 - unpaidTime).toString();
+            row.paid = Math.min(80, loggedTime + vacationTime + sickTime + holidayTime).toString();
         } else {
             row.paid = (loggedTime + vacationTime + sickTime).toString();
         }
 
-        row.unpaid = unpaidTime.toString();
-        row.logged = loggedTime.toString();
-        row.vacation = vacationTime.toString();
-        row.sick = sickTime.toString();
-        row.overtime = Math.max(0, loggedTime - 80).toString();
-        row.holiday = (this.timetable.holiday || 0).toString();
+        // row.unpaid = unpaidTime.toString();
+        row.logged = (loggedTime > 0) ? loggedTime.toString() : '';
+        row.vacation = (vacationTime > 0) ? vacationTime.toString() : '';
+        row.sick = (sickTime > 0) ? sickTime.toString() : '';
+        row.overtime = (overTime > 0) ? overTime.toString() : '';
+        row.holiday = (holidayTime > 0) ? holidayTime.toString() : '';
         row.extra = {
             slack: this.slackName,
             projects: projectsForPeriod

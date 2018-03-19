@@ -55,13 +55,16 @@ const HEADERS = {
     payroll: [
         { field: 'date', header: 'Payroll Date' },
         { field: 'name', header: 'Employee Name' },
-        { field: 'paid', header: 'Paid Hours' },
-        { field: 'unpaid', header: 'Unpaid Hours' },
         { field: 'logged', header: 'Logged Hours' },
+        { field: 'unpaid', header: 'Logged Hours' },
+        { field: 'paid', header: 'Paid Hours' },
+        { field: 'salary', header: 'Salary Hours' },
+        { field: 'overtime', header: 'Overtime Hours' },
         { field: 'vacation', header: 'Vacation Hours' },
         { field: 'sick', header: 'Sick Hours' },
-        { field: 'overtime', header: 'Overtime Hours' },
-        { field: 'holiday', header: 'Holiday Hours' }
+        { field: 'holiday', header: 'Holiday Hours' },
+        { field: 'misc', header: 'Misc PTO' },
+        { field: 'done', header: 'Done?' }
     ],
     events: [
         { field: 'date', header: 'Event Date' },
@@ -244,13 +247,16 @@ export namespace Rows {
     export class PayrollReportsRow extends Row {
         date: string;
         name: string;
-        paid: string;
-        unpaid: string;
         logged: string;
+        unpaid: string;
+        paid: string;
+        salary: string;
+        overtime: string;
         vacation: string;
         sick: string;
-        overtime: string;
         holiday: string;
+        misc: string;
+        done: string;
         extra: any;
 
         protected constructor(values: any[], range: string) {
