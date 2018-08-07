@@ -80,7 +80,7 @@ function onAttitudeHandler(bot: botkit.Bot, message: Message) {
 
 export default function (controller: botkit.Controller) {
     // bark.bark
-    controller.hears('bark',
+    controller.hears('(bark|woof|arf)',
         EVENTS.hear,
         buildOptions({ id: 'bark.bark' }, controller),
         onBarkHandler);
