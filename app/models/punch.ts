@@ -1,6 +1,6 @@
 import * as moment from 'moment-timezone';
 const weekend = require('moment-weekend');
-import * as uuid from 'node-uuid';
+const uuid = require('uuid/v1');
 
 import { Mode } from '../shared/common';
 import { MODES, REGEX, TIMEZONE } from '../shared/constants';
@@ -322,7 +322,7 @@ export class Punch {
         // UUID sanity check
         if (row.id.length != 36) {
             console.debug(`${row.id} is not a valid UUID, changing to valid UUID`);
-            row.id = uuid.v1();
+            row.id = uuid
             sheet.saveRow(row);
         }
 
@@ -483,7 +483,7 @@ export class Punch {
             values: [],
             range: ''
         });
-        row.id = row.id || uuid.v1();
+        row.id = row.id || uuid();
         row.today = row.today || this.date.format('MM/DD/YYYY');
         row.name = row.name || name;
         if (this.times.block) {

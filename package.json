@@ -36,7 +36,7 @@
     "node-schedule": "^1.2.1",
     "request": "^2.88.0",
     "string-replace-async": "^1.2.0",
-    "uuid": "^3.0.1",
+    "uuid": "^3.3.2",
     "winston": "^2.4.4",
     "yargs": "^8.0.2"
   },
@@ -50,7 +50,7 @@
     "@types/mocha": "^2.2.41",
     "@types/moment-timezone": "^0.5.8",
     "@types/node": "^7.0.18",
-    "@types/node-uuid": "^0.0.28",
+    "@types/uuid": "^3.4.4",
     "@types/winston": "^2.3.2",
     "@types/yargs": "^6.6.0",
     "chai": "^3.5.0",
