@@ -803,9 +803,9 @@ botbuilder@^3.8.4:
     sprintf-js "^1.0.3"
     url-join "^1.1.0"
 
-botkit-storage-firebase@^1.0.0:
+botkit-storage-firebase@bcoia/botkit-storage-firebase:
   version "1.0.1"
-  resolved "https://registry.yarnpkg.com/botkit-storage-firebase/-/botkit-storage-firebase-1.0.1.tgz#52eff9ddb363073404dbe16b64f09803462f00cb"
+  resolved "https://codeload.github.com/bcoia/botkit-storage-firebase/tar.gz/e10d9d0b83f8496abc176283b4e9404e34746548"
   dependencies:
     firebase "^3.0.4"
 
