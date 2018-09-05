@@ -28,7 +28,7 @@ export class App {
         this.bots = {};
         this.orgs = {};
         this.controller = Botkit.slackbot({
-            storage: createFirebaseStorage({ firebase_uri: App.config.storageUri }),
+            storage: createFirebaseStorage({ databaseURL: App.config.storageUri }),
             logger: console.winston,
             stats_optout: true
         }).configureSlackApp({
