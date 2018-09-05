@@ -45,6 +45,8 @@ export class App {
 
             this.controller.on('create_bot', this.onCreateBot.bind(this));
             this.controller.on('create_team', this.onCreateTeam.bind(this));
+            this.controller.on('rtm_open', this.onRtmOpen.bind(this));
+            this.controller.on('rtm_close', this.onRtmClose.bind(this));
             this.controller.on(EVENTS.shouldHound, this.onIbizanEventPassOrganization.bind(this));
             this.controller.on(EVENTS.resetHound, this.onIbizanEventPassOrganization.bind(this));
             this.controller.on(EVENTS.dailyReport, this.onIbizanEventPassOrganization.bind(this));
@@ -83,6 +85,34 @@ export class App {
     }
     onCreateTeam(bot: botkit.Bot, team: Team) {
         this.controller.saveTeam(team);
+    }
+    onRtmOpen(bot) {
+        console.log('** RTM API connected');
+    }
+    onRtmClose(bot) {
+        console.warn('** RTM API closed');
+        this.reconnectToRtm(bot);
+    }
+    reconnectToRtm(bot, attempt = 0) {
+        if (attempt > 0 && attempt <= 2) {
+            console.log(`Reconnecting to RTM API, attempt ${attempt}...`);
+        }
+        if (attempt >= 3) {
+            console.error(`** RTM API failed to reconnect after ${attempt} attempts`);
+        } else {
+            setTimeout(() => {
+                bot.startRTM(function(err) {
+                    if (err) {
+                        attempt += 1;
+                        this.reconnectToRtm(bot, attempt);
+                    } else {
+                        if (attempt >= 1) {
+                            console.log(`** RTM API reconnected after ${attempt} attempts`);
+                        }
+                    }
+                });
+            }, 5000 * attempt);
+        }
     }
     onIbizanEventPassOrganization(next: (organization: Organization) => void) {
         Object.keys(this.bots).forEach(token => {
@@ -192,6 +222,7 @@ export class App {
     onReceiveCheckIndirectMention(bot: botkit.Bot, message: Message, next: () => void) {
         if (message &&
             message.text &&
+            message.channel[0] != 'D' &&
             (message.text.match(REGEX.ibizan_indirect))) {
             this.controller.trigger('direct_mention', [bot, message]);
         }

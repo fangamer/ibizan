@@ -1,6 +1,6 @@
 {
   "name": "ibizan",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Dog-themed Employee Time Tracking Slack Bot",
   "main": "./bin/index.js",
   "bin": {
@@ -23,22 +23,22 @@
     "url": "https://github.com/ibizan/ibizan.git"
   },
   "dependencies": {
-    "body-parser": "^1.17.1",
-    "botkit": "^0.6.11",
-    "botkit-storage-firebase": "^1.0.0",
-    "express": "^4.15.2",
+    "body-parser": "^1.18.3",
+    "botkit": "^0.6.16",
+    "botkit-storage-firebase": "^1.0.1",
+    "express": "^4.16.3",
     "google-auth-library": "^0.10.0",
-    "googleapis": "^19.0.0",
-    "moment": "^2.18.1",
-    "moment-range": "^3.0.3",
-    "moment-timezone": "^0.5.13",
+    "googleapis": "^33.0.0",
+    "moment": "^2.22.2",
+    "moment-range": "^3.1.1",
+    "moment-timezone": "^0.5.21",
     "moment-weekend": "^1.0.1",
     "node-schedule": "^1.2.1",
-    "request": "^2.81.0",
+    "request": "^2.88.0",
     "string-replace-async": "^1.2.0",
-    "uuid": "^3.0.1",
-    "winston": "^2.3.1",
-    "yargs": "^8.0.1"
+    "uuid": "^3.3.2",
+    "winston": "^2.4.4",
+    "yargs": "^8.0.2"
   },
   "engines": {
     "node": ">= 6.0"
@@ -48,18 +48,18 @@
     "@types/chai": "^3.5.2",
     "@types/express": "^4.0.35",
     "@types/mocha": "^2.2.41",
-    "@types/moment-timezone": "^0.2.34",
+    "@types/moment-timezone": "^0.5.8",
     "@types/node": "^7.0.18",
     "@types/node-uuid": "^0.0.28",
     "@types/winston": "^2.3.2",
     "@types/yargs": "^6.6.0",
     "chai": "^3.5.0",
-    "coveralls": "^2.13.1",
-    "mocha": "^3.4.1",
+    "coveralls": "^2.13.3",
+    "mocha": "^3.5.3",
     "npm-build-tools": "^2.2.5",
     "nyc": "^10.3.2",
     "ts-node": "^3.0.4",
-    "typescript": "^2.3.2"
+    "typescript": "^2.9.2"
   },
   "scripts": {
     "clean": "n-clean bin",
