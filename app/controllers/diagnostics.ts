@@ -8,7 +8,7 @@
 // Author:
 //   aaronsky
 
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
 import { EVENTS, TIMEZONE } from '../shared/constants';
 import { Message } from '../shared/common';

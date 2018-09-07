@@ -14,7 +14,7 @@
 // Author:
 //   aaronsky
 
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 const schedule = require('node-schedule');
 
 import { EVENTS, TIMEZONE } from '../shared/constants';
