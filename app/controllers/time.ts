@@ -378,10 +378,16 @@ function onHoursForPeriodHandler(bot: botkit.Bot, message: Message) {
             hour: 0,
             minute: 0,
             second: 0
-        }).day('Sunday');
+        }).day('Monday');
         upperBoundDate = now;
+        if (message.match[0].match(/(last|previous)/)) {
+            lowerBoundDate = lowerBoundDate.subtract(1, 'week');
+            upperBoundDate = upperBoundDate.subtract(1, 'week');
+            dateArticle = `last week (${lowerBoundDate.format('M/DD')} to ${upperBoundDate.format('M/DD')})`;
+        } else {
+            dateArticle = `this week (${lowerBoundDate.format('M/DD')} to ${upperBoundDate.format('M/DD')})`;
+        }
         report = user.toRawPayroll(lowerBoundDate, upperBoundDate);
-        dateArticle = 'this week';
     } else if (mode === 'month') {
         lowerBoundDate = moment.tz({
             hour: 0,
