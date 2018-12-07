@@ -379,7 +379,11 @@ function onHoursForPeriodHandler(bot: botkit.Bot, message: Message) {
             minute: 0,
             second: 0
         }).day('Monday');
-        upperBoundDate = now;
+        upperBoundDate = moment({
+            hour: 0,
+            minute: 0,
+            second: 0
+        }).day('Sunday');;
         if (message.match[0].match(/(last|previous)/)) {
             lowerBoundDate = lowerBoundDate.subtract(1, 'week');
             upperBoundDate = upperBoundDate.subtract(1, 'week');
