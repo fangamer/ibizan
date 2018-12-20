@@ -53,7 +53,7 @@ async function onScheduledPayrollHandler(organization: Organization) {
         console.warn(`Don\'t make scheduled daily report, the ${organization.name} organization isn\'t ready yet.`);
         return;
     } else if (!organization.calendar.isPayWeek()) {
-        console.warn('Don\'t run scheduled payroll reminder, it isn\'t a pay-week.');
+        console.warn('Don\'t run scheduled payroll, it isn\'t a pay-week.');
         return;
     }
     const twoWeeksAgo = moment().subtract(2, 'weeks');
@@ -115,12 +115,12 @@ function onScheduledPayrollWarningHandler(organization: Organization) {
 }
 
 export default function (controller: botkit.Controller) {
-    const generateDailyReportJob = schedule.scheduleJob('0 9 * * *', () => {
-        controller.trigger(EVENTS.dailyReport, [onScheduledReportHandler]);
-    });
+    // const generateDailyReportJob = schedule.scheduleJob('0 9 * * *', () => {
+    //     controller.trigger(EVENTS.dailyReport, [onScheduledReportHandler]);
+    // });
 
     // Ibizan will export a Payroll Report every other Sunday night.
-    const generatePayrollReportJob = schedule.scheduleJob('0 23 * * 0', () => {
+    const generatePayrollReportJob = schedule.scheduleJob('0 7 * * 1', () => {
         controller.trigger(EVENTS.payrollReport, [onScheduledPayrollHandler]);
     });
 
