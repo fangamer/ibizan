@@ -79,7 +79,7 @@ export class App {
                     convo.say('You must now /invite me to a channel so that I can be of use!');
                 }
             });
-        });
+        };
     }
     onCreateTeam(bot: botkit.Bot, team: Team) {
         this.controller.saveTeam(team);
