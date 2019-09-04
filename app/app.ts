@@ -30,6 +30,7 @@ export class App {
         this.controller = Botkit.slackbot({
             storage: createFirebaseStorage({ databaseURL: App.config.storageUri }),
             logger: console.winston,
+            send_via_rtm: false,
             stats_optout: true
         }).configureSlackApp({
             clientId: App.config.slack.clientId,
@@ -57,7 +58,7 @@ export class App {
             this.controller.middleware.receive.use(this.onReceiveSetOrganization.bind(this))
                 .use(this.onReceiveSetAccessHandler.bind(this));
             this.controller.middleware.receive.use(this.onReceiveCheckIndirectMention.bind(this));
-            this.controller.storage.teams.all(this.connectTeamsToSlack.bind(this));
+            this.controller.storage.teams.all(this.connectTeam.bind(this));
 
             this.controller.createWebhookEndpoints(this.webserver);
 
@@ -66,12 +67,9 @@ export class App {
     }
     onCreateBot(bot: botkit.Bot, team: Team) {
         if (this.bots[bot.config.token]) {
-            return;
-        }
-        bot.startRTM((err) => {
-            if (!err) {
-                this.trackBot(bot, team);
-            }
+            return; // Already online! Do nothing
+        } else {
+            this.trackBot(bot, team);
             const message = { user: team.createdBy } as Message;
             bot.startPrivateConversation(message, (err, convo) => {
                 if (err) {
@@ -285,7 +283,7 @@ export class App {
             }
         }
     }
-    connectTeamsToSlack(err, teams: Team[]) {
+    connectTeamsToRtm(err, teams: Team[]) {
         if (err) {
             throw new Error(err);
         }
@@ -302,6 +300,10 @@ export class App {
                 });
             }
         });
+    }
+    connectTeam(team_config) {
+        let bot = this.controller.spawn(team_config);
+        this.controller.trigger('create_bot', [bot, team_config]);
     }
     loadScripts() {
         Object.keys(scripts).forEach(key => {
