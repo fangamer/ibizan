@@ -58,7 +58,7 @@ export class App {
             this.controller.middleware.receive.use(this.onReceiveSetOrganization.bind(this))
                 .use(this.onReceiveSetAccessHandler.bind(this));
             this.controller.middleware.receive.use(this.onReceiveCheckIndirectMention.bind(this));
-            this.controller.storage.teams.all(this.connectTeam.bind(this));
+            this.controller.storage.teams.all(this.connectTeams.bind(this));
 
             this.controller.createWebhookEndpoints(this.webserver);
 
@@ -82,7 +82,7 @@ export class App {
         };
     }
     onCreateTeam(bot: botkit.Bot, team: Team) {
-        this.controller.saveTeam(team);
+        // this.controller.saveTeam(team);
     }
     onRtmOpen(bot) {
         console.log('** RTM API connected');
@@ -122,7 +122,7 @@ export class App {
     trackBot(bot: botkit.Bot, team: Team) {
         this.bots[bot.config.token] = bot;
         team = this.validateConfig(team);
-        this.controller.saveTeam(team);
+        // this.controller.saveTeam(team);
         this.orgs[bot.config.token] = new Organization(team.config);
     }
     validateConfig(team: Team) {
@@ -301,9 +301,13 @@ export class App {
             }
         });
     }
-    connectTeam(team_config) {
-        let bot = this.controller.spawn(team_config);
-        this.controller.trigger('create_bot', [bot, team_config]);
+    connectTeams(err, teams: Team[]) {
+        for (let team of teams) {
+            if (team.bot) {
+                let bot = this.controller.spawn(team);
+                this.controller.trigger('create_bot', [bot, team]);
+            }
+        }
     }
     loadScripts() {
         Object.keys(scripts).forEach(key => {
