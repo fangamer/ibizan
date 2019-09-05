@@ -14,7 +14,7 @@ interface RegexConstants {
 }
 export const REGEX: RegexConstants = {
     ibizan: /^(?:@)?ibizan(?::)? ?/i,
-    ibizan_indirect: /^(ibizan|<@U9853LMLM>)(?::)? ?/i,
+    ibizan_indirect: /^ibizan(?::)? ?/i,
     bigdog: /^(?:@)?(iibzan|iziban|ibizain|ibizian|ibzian|bizian|ibzain)(?::)? ?/i,
     modes: /\b(in|out|vacation|sick|unpaid)\b/i,
     days: /monday|tuesday|wednesday|thursday|friday|saturday|sunday/i,
