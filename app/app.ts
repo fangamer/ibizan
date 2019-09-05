@@ -223,10 +223,12 @@ export class App {
             message.channel[0] != 'D' &&
             (message.text.match(REGEX.ibizan_indirect))) {
             this.controller.trigger('direct_mention', [bot, message]);
+            return false;
         } else if (message &&
             message.text &&
             message.channel[0] == 'D') {
             this.controller.trigger('direct_message', [bot, message]);
+            return false;
         }
         next();
     }
