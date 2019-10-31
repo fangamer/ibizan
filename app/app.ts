@@ -226,7 +226,7 @@ export class App {
             return false;
         } else if (message &&
             message.text &&
-            message.channel[0] == 'D') {
+            (message.channel[0] == 'D' || message.channel == 'C0H5G41ND')) {
             this.controller.trigger('direct_message', [bot, message]);
             return false;
         }

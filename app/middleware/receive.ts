@@ -10,7 +10,7 @@ function onReceiveMessage(bot: botkit.Bot, message: Message) {
     if (message &&
         message.text &&
         message.text.length < 30 &&
-        (message.text.match(REGEX.ibizan) || message.channel && (message.channel.substring(0, 1) === 'D' || message.channel === 'C0H5G41ND'))) {
+        (message.text.match(REGEX.ibizan) || message.channel && message.channel.substring(0, 1) === 'D')) {
         bot.reply(message, `_${random(message.copy.access.unknownCommand)} ${random(message.copy.access.askForHelp)}_`);
         Slack.reactTo(message, 'question');
         return;
